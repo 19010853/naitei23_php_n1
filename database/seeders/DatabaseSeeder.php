@@ -20,7 +20,11 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RolePermissionSeeder::class,
             UserSeeder::class,
+            UserBankAccountSeeder::class,
             CategorySeeder::class,
+            TourSeeder::class,
+            BookingSeeder::class,
+            EngagementSeeder::class,
         ]);
     }
 }
