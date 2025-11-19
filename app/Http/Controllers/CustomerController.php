@@ -2,38 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Tour;
+use App\Models\TourSchedule;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
     /**
-     * Display the categories page for customers
+     * Display the tours page for customers
      */
     public function categories()
     {
-        $categories = Category::withCount('tours')
+        $tours = Tour::withCount('schedules')
             ->orderBy('name')
             ->get();
 
-        return view('customer.pages.categories', compact('categories'));
+        return view('customer.pages.categories', compact('tours'));
     }
 
     /**
-     * Display tours in a specific category
+     * Display tour schedules for a specific tour
      */
-    public function tours($categoryId)
+    public function tours($tourId)
     {
-        $category = Category::findOrFail($categoryId);
-        $tours = Tour::where('category_id', $categoryId)
-            ->with('schedules')
-            ->withCount(['reviews', 'likes', 'schedules'])
-            ->withAvg('reviews', 'rating')
-            ->latest()
+        $tour = Tour::findOrFail($tourId);
+        $schedules = TourSchedule::where('tour_id', $tourId)
+            ->with('tour')
+            ->withCount('bookings')
+            ->where('start_date', '>=', now())
+            ->orderBy('start_date')
             ->paginate(12);
 
-        return view('customer.pages.tours', compact('category', 'tours'));
+        return view('customer.pages.tours', compact('tour', 'schedules'));
     }
 }
 

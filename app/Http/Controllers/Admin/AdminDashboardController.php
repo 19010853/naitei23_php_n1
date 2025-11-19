@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
-use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Payment;
 use App\Models\Review;
 use App\Models\Tour;
+use App\Models\TourSchedule;
 use App\Models\User;
 
 class AdminDashboardController extends Controller
@@ -27,19 +27,19 @@ class AdminDashboardController extends Controller
                 ],
             ],
             [
-                'key' => 'total_categories',
-                'label' => 'Danh mục',
-                'value' => Category::count(),
-                'trend' => null,
-            ],
-            [
                 'key' => 'total_tours',
-                'label' => 'Tour đang bán',
+                'label' => 'Tours',
                 'value' => Tour::count(),
                 'trend' => [
                     'direction' => 'positive',
                     'text' => '+4 tour mới',
                 ],
+            ],
+            [
+                'key' => 'total_schedules',
+                'label' => 'Lịch trình',
+                'value' => TourSchedule::count(),
+                'trend' => null,
             ],
             [
                 'key' => 'total_bookings',
@@ -72,8 +72,8 @@ class AdminDashboardController extends Controller
             'tourSchedule.tour',
         ])->latest()->take(5)->get();
 
-        $topTours = Tour::with(['category'])
-            ->withCount(['reviews', 'likes'])
+        $topTours = Tour::withCount(['reviews', 'likes', 'schedules'])
+            ->withAvg('reviews', 'rating')
             ->orderByDesc('reviews_count')
             ->take(5)
             ->get();
@@ -90,8 +90,8 @@ class AdminDashboardController extends Controller
     {
         return response()->json([
             'total_users' => User::count(),
-            'total_categories' => Category::count(),
             'total_tours' => Tour::count(),
+            'total_schedules' => TourSchedule::count(),
             'total_bookings' => Booking::count(),
             'pending_bookings' => Booking::where('status', 'pending')->count(),
             'successful_payments' => Payment::where('status', 'success')->count(),

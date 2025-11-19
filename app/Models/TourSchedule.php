@@ -26,14 +26,19 @@ class TourSchedule extends Model
         'max_participants' => 'integer',
     ];
 
+    /**
+     * TourSchedule belongs to Tour
+     */
     public function tour(): BelongsTo
     {
         return $this->belongsTo(Tour::class, 'tour_id');
     }
 
+    /**
+     * TourSchedule has many bookings
+     */
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class, 'tour_schedule_id');
     }
 }
-

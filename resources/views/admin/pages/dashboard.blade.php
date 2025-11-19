@@ -82,7 +82,8 @@
                 <thead>
                     <tr>
                         <th>Tour</th>
-                        <th>Danh mục</th>
+                        <th>Địa điểm</th>
+                        <th>Lịch trình</th>
                         <th>Đánh giá</th>
                         <th>Lượt thích</th>
                     </tr>
@@ -93,15 +94,22 @@
                             <td>
                                 <strong>{{ $tour->name }}</strong>
                                 <br>
-                                <small style="color: var(--traveloka-muted);">{{ $tour->location }}</small>
+                                <small style="color: var(--traveloka-muted);">{{ Str::limit($tour->description ?? '', 50) }}</small>
                             </td>
-                            <td>{{ $tour->category->name ?? '-' }}</td>
-                            <td>{{ number_format($tour->reviews_count) }}</td>
+                            <td>{{ $tour->location }}</td>
+                            <td>{{ $tour->schedules_count }} lịch</td>
+                            <td>
+                                <span style="display: inline-flex; align-items: center; gap: 4px;">
+                                    <i class="fas fa-star" style="color: var(--traveloka-orange);"></i>
+                                    {{ number_format((float) ($tour->reviews_avg_rating ?? 0), 1) }}/5
+                                    <small style="color: var(--traveloka-muted);">({{ number_format($tour->reviews_count) }})</small>
+                                </span>
+                            </td>
                             <td>{{ number_format($tour->likes_count) }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="empty-state">Chưa có dữ liệu tour</td>
+                            <td colspan="5" class="empty-state">Chưa có dữ liệu tour</td>
                         </tr>
                     @endforelse
                 </tbody>
