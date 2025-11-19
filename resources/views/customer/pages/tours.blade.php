@@ -48,17 +48,16 @@
                     @endif
                 </div>
                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 flex items-center justify-center">
-                    <a href="#" 
-                       class="opacity-0 group-hover:opacity-100 bg-orange-500 text-white px-6 py-2 rounded-md font-semibold transition-opacity duration-300 hover:bg-orange-600">
+                    <span class="opacity-0 group-hover:opacity-100 bg-orange-500 text-white px-6 py-2 rounded-md font-semibold transition-opacity duration-300">
                         Xem chi tiết
-                    </a>
+                    </span>
                 </div>
             </div>
             <div class="p-4">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-1">{{ $tour->name }}</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2 truncate">{{ $tour->name }}</h3>
                 <p class="text-sm text-gray-600 mb-2 flex items-center">
                     <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
-                    <span class="line-clamp-1">{{ $tour->location }}</span>
+                    <span class="truncate">{{ $tour->location }}</span>
                 </p>
                 @if($tour->description)
                 <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $tour->description }}</p>
@@ -75,7 +74,7 @@
                         </span>
                     </div>
                 </div>
-                @if($tour->schedules->count() > 0)
+                @if($tour->schedules_count > 0 && $tour->schedules->count() > 0)
                 <div class="mt-3 pt-3 border-t border-gray-200">
                     <p class="text-orange-500 font-semibold">
                         Từ {{ number_format($tour->schedules->min('price'), 0, '.', ',') }} VNĐ
@@ -104,20 +103,4 @@
 </div>
 @endsection
 
-@push('styles')
-<style>
-.line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-</style>
-@endpush
 

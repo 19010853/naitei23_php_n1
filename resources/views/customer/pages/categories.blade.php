@@ -17,15 +17,9 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Filter Bar -->
-    <div class="bg-gray-50 rounded-lg p-4 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div class="flex items-center space-x-4">
-            <button class="flex items-center space-x-2 text-gray-700 hover:text-orange-500">
-                <i class="fas fa-filter"></i>
-                <span>Lọc</span>
-            </button>
-        </div>
-        <div class="flex items-center space-x-4 text-sm text-gray-600">
+    <!-- Info Bar -->
+    <div class="bg-gray-50 rounded-lg p-4 mb-8">
+        <div class="flex items-center justify-center text-sm text-gray-600">
             <span>Hiển thị {{ $categories->count() }} danh mục</span>
         </div>
     </div>
@@ -66,14 +60,4 @@
 </div>
 @endsection
 
-@push('styles')
-<style>
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-</style>
-@endpush
 

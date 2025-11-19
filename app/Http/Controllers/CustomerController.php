@@ -27,8 +27,8 @@ class CustomerController extends Controller
     {
         $category = Category::findOrFail($categoryId);
         $tours = Tour::where('category_id', $categoryId)
-            ->with('category')
-            ->withCount(['reviews', 'likes'])
+            ->with('schedules')
+            ->withCount(['reviews', 'likes', 'schedules'])
             ->withAvg('reviews', 'rating')
             ->latest()
             ->paginate(12);

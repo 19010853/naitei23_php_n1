@@ -24,12 +24,19 @@
             <div class="flex items-center space-x-4">
                 @auth
                     <div class="relative user-dropdown">
-                        <button id="userDropdown" class="flex items-center space-x-2 text-gray-700 hover:text-orange-500 focus:outline-none">
+                        <button id="userDropdown" 
+                                class="flex items-center space-x-2 text-gray-700 hover:text-orange-500 focus:outline-none"
+                                aria-expanded="false"
+                                aria-haspopup="true"
+                                aria-label="User menu">
                             <i class="fas fa-user-circle text-xl"></i>
                             <span class="hidden md:inline">{{ Auth::user()->name }}</span>
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
-                        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                        <div id="userMenu" 
+                             class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
+                             role="menu"
+                             aria-orientation="vertical">
                             <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-user mr-2"></i> Hồ sơ
                             </a>
@@ -49,13 +56,6 @@
                         Đăng ký
                     </a>
                 @endauth
-
-                <a href="#" class="text-gray-700 hover:text-orange-500">
-                    <i class="fas fa-search text-xl"></i>
-                </a>
-                <a href="#" class="text-gray-700 hover:text-orange-500">
-                    <i class="fas fa-heart text-xl"></i>
-                </a>
             </div>
         </div>
     </div>
@@ -73,15 +73,40 @@ document.addEventListener('DOMContentLoaded', function() {
     const userMenu = document.getElementById('userMenu');
     
     if (userDropdown && userMenu) {
+        const toggleMenu = function(isOpen) {
+            userMenu.classList.toggle('hidden', !isOpen);
+            userDropdown.setAttribute('aria-expanded', isOpen);
+        };
+
+        // Click handler
         userDropdown.addEventListener('click', function(e) {
             e.preventDefault();
-            userMenu.classList.toggle('hidden');
+            const isOpen = !userMenu.classList.contains('hidden');
+            toggleMenu(!isOpen);
         });
-        
+
+        // Keyboard navigation
+        userDropdown.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const isOpen = !userMenu.classList.contains('hidden');
+                toggleMenu(!isOpen);
+            } else if (e.key === 'Escape') {
+                toggleMenu(false);
+            }
+        });
+
         // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
             if (!userDropdown.contains(e.target) && !userMenu.contains(e.target)) {
-                userMenu.classList.add('hidden');
+                toggleMenu(false);
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !userMenu.classList.contains('hidden')) {
+                toggleMenu(false);
             }
         });
     }
