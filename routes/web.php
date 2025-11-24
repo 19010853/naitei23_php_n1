@@ -35,8 +35,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard/stats', [AdminDashboardController::class, 'stats'])->name('dashboard.stats');
 
         Route::get('users', [AdminManagementController::class, 'users'])->name('users');
-        Route::get('categories', [AdminManagementController::class, 'categories'])->name('categories');
+        
+        // Tours CRUD (thông tin chung)
         Route::get('tours', [AdminManagementController::class, 'tours'])->name('tours');
+        Route::post('tours', [AdminManagementController::class, 'storeTour'])->name('tours.store');
+        Route::put('tours/{tour}', [AdminManagementController::class, 'updateTour'])->name('tours.update');
+        Route::delete('tours/{tour}', [AdminManagementController::class, 'deleteTour'])->name('tours.delete');
+        
+        // Tour Schedules CRUD (lịch trình cụ thể)
+        Route::get('tour-schedules', [AdminManagementController::class, 'tourSchedules'])->name('tour-schedules');
+        Route::post('tour-schedules', [AdminManagementController::class, 'storeTourSchedule'])->name('tour-schedules.store');
+        Route::put('tour-schedules/{tourSchedule}', [AdminManagementController::class, 'updateTourSchedule'])->name('tour-schedules.update');
+        Route::delete('tour-schedules/{tourSchedule}', [AdminManagementController::class, 'deleteTourSchedule'])->name('tour-schedules.delete');
+        
         Route::get('bookings', [AdminManagementController::class, 'bookings'])->name('bookings');
         Route::get('payments', [AdminManagementController::class, 'payments'])->name('payments');
         Route::get('reviews', [AdminManagementController::class, 'reviews'])->name('reviews');
@@ -47,6 +58,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Customer routes
+Route::get('/categories', [\App\Http\Controllers\CustomerController::class, 'categories'])->name('customer.categories');
+Route::get('/tours/{tour}', [\App\Http\Controllers\CustomerController::class, 'tours'])->name('customer.tours');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -1,17 +1,17 @@
 @extends('customer.layouts.app')
 
-@section('title', $category->name . ' - Traveloka Tour Booking')
+@section('title', $tour->name . ' - Traveloka Tour Booking')
 
 @section('hero')
 <section class="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl font-bold mb-4">{{ $category->name }}</h1>
+        <h1 class="text-4xl font-bold mb-4">{{ $tour->name }}</h1>
         <div class="flex items-center justify-center space-x-2 text-orange-100">
             <a href="{{ route('customer.categories') }}" class="hover:text-white">Trang chủ</a>
             <i class="fas fa-chevron-right text-xs"></i>
-            <a href="{{ route('customer.categories') }}" class="hover:text-white">Danh mục Tour</a>
+            <a href="{{ route('customer.categories') }}" class="hover:text-white">Danh sách Tour</a>
             <i class="fas fa-chevron-right text-xs"></i>
-            <span>{{ $category->name }}</span>
+            <span>{{ $tour->name }}</span>
         </div>
     </div>
 </section>
@@ -19,85 +19,92 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Filter Bar -->
-    <div class="bg-gray-50 rounded-lg p-4 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div class="flex items-center space-x-4">
-            <button class="flex items-center space-x-2 text-gray-700 hover:text-orange-500">
-                <i class="fas fa-filter"></i>
-                <span>Lọc</span>
-            </button>
-        </div>
-        <div class="flex items-center space-x-4 text-sm text-gray-600">
-            <span>Hiển thị {{ $tours->firstItem() ?? 0 }}-{{ $tours->lastItem() ?? 0 }} trong tổng số {{ $tours->total() }} tour</span>
+    <!-- Tour Info -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @if($tour->image_url)
+            <div>
+                <img src="{{ asset($tour->image_url) }}" alt="{{ $tour->name }}" 
+                     class="w-full h-64 object-cover rounded-lg">
+            </div>
+            @endif
+            <div>
+                <h2 class="text-2xl font-bold mb-4">{{ $tour->name }}</h2>
+                <p class="text-gray-600 mb-4">
+                    <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
+                    {{ $tour->location }}
+                </p>
+                @if($tour->description)
+                <p class="text-gray-700 mb-4">{{ $tour->description }}</p>
+                @endif
+            </div>
         </div>
     </div>
 
-    <!-- Tours Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-        @forelse($tours as $tour)
-        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
-            <div class="relative h-48 overflow-hidden">
-                <img src="{{ $tour->image_url ?? 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400' }}" 
-                     alt="{{ $tour->name }}"
-                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
-                <div class="absolute top-2 right-2 flex flex-col gap-2">
-                    @if($tour->reviews_avg_rating)
-                    <span class="bg-orange-500 text-white px-2 py-1 rounded text-xs font-semibold">
-                        <i class="fas fa-star mr-1"></i>{{ number_format($tour->reviews_avg_rating, 1) }}
-                    </span>
-                    @endif
+    <!-- Filter Bar -->
+    <div class="bg-gray-50 rounded-lg p-4 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex items-center space-x-4 text-sm text-gray-600">
+            <span>Hiển thị {{ $schedules->firstItem() ?? 0 }}-{{ $schedules->lastItem() ?? 0 }} trong tổng số {{ $schedules->total() }} lịch trình</span>
+        </div>
+    </div>
+
+    <!-- Tour Schedules Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        @forelse($schedules as $schedule)
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Ngày khởi hành</p>
+                        <p class="text-lg font-semibold text-gray-900">
+                            {{ $schedule->start_date->format('d/m/Y') }}
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-600 mb-1">Ngày kết thúc</p>
+                        <p class="text-lg font-semibold text-gray-900">
+                            {{ $schedule->end_date->format('d/m/Y') }}
+                        </p>
+                    </div>
                 </div>
-                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 flex items-center justify-center">
-                    <span class="opacity-0 group-hover:opacity-100 bg-orange-500 text-white px-6 py-2 rounded-md font-semibold transition-opacity duration-300">
-                        Xem chi tiết
-                    </span>
-                </div>
-            </div>
-            <div class="p-4">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2 truncate">{{ $tour->name }}</h3>
-                <p class="text-sm text-gray-600 mb-2 flex items-center">
-                    <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
-                    <span class="truncate">{{ $tour->location }}</span>
-                </p>
-                @if($tour->description)
-                <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $tour->description }}</p>
-                @endif
-                <div class="flex items-center justify-between text-sm">
-                    <div class="flex items-center space-x-4 text-gray-600">
+                <div class="border-t border-gray-200 pt-4 mt-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-600">Giá:</span>
+                        <span class="text-2xl font-bold text-orange-500">
+                            {{ number_format($schedule->price, 0, '.', ',') }} VNĐ
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm text-gray-600">
                         <span>
-                            <i class="fas fa-calendar-alt mr-1"></i>
-                            {{ $tour->schedules_count ?? 0 }} lịch
+                            <i class="fas fa-users mr-1"></i>
+                            Tối đa {{ $schedule->max_participants }} người
                         </span>
                         <span>
-                            <i class="fas fa-heart mr-1 text-red-500"></i>
-                            {{ $tour->likes_count ?? 0 }}
+                            <i class="fas fa-calendar-alt mr-1"></i>
+                            {{ $schedule->start_date->diffInDays($schedule->end_date) + 1 }} ngày
                         </span>
                     </div>
                 </div>
-                @if($tour->schedules_count > 0 && $tour->schedules->count() > 0)
-                <div class="mt-3 pt-3 border-t border-gray-200">
-                    <p class="text-orange-500 font-semibold">
-                        Từ {{ number_format($tour->schedules->min('price'), 0, '.', ',') }} VNĐ
-                    </p>
-                </div>
-                @endif
+                <button class="w-full mt-4 bg-orange-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-orange-600 transition-colors">
+                    Đặt ngay
+                </button>
             </div>
         </div>
         @empty
         <div class="col-span-full text-center py-12">
             <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
-            <p class="text-gray-600 text-lg mb-4">Chưa có tour nào trong danh mục này.</p>
+            <p class="text-gray-600 text-lg mb-4">Chưa có lịch trình nào cho tour này.</p>
             <a href="{{ route('customer.categories') }}" class="inline-block bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600">
-                Quay lại danh mục
+                Quay lại danh sách tour
             </a>
         </div>
         @endforelse
     </div>
 
     <!-- Pagination -->
-    @if($tours->hasPages())
+    @if($schedules->hasPages())
     <div class="flex justify-center">
-        {{ $tours->links() }}
+        {{ $schedules->links() }}
     </div>
     @endif
 </div>
