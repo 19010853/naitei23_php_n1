@@ -17,6 +17,10 @@
         <form method="POST" action="{{ route('login') }}" class="space-y-5">
             @csrf
 
+            @if(!empty($redirectTo))
+                <input type="hidden" name="redirect_to" value="{{ $redirectTo }}">
+            @endif
+
             <div>
                 <x-label for="email" :value="__('Email')" />
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
@@ -49,7 +53,8 @@
 
                 <p class="mt-4 text-center text-sm text-slate-500">
                     {{ __('common.new_to_traveloka') }}
-                    <a class="font-semibold text-sky-600 hover:text-sky-500" href="{{ route('register') }}">
+                    <a class="font-semibold text-sky-600 hover:text-sky-500"
+                       href="{{ route('register', !empty($redirectTo) ? ['redirectTo' => $redirectTo] : []) }}">
                         {{ __('common.create_account') }}
                     </a>
                 </p>
@@ -65,7 +70,7 @@
         </div>
 
         <div>
-            <a href="{{ route('google.login') }}"
+            <a href="{{ route('google.login', !empty($redirectTo) ? ['redirectTo' => $redirectTo] : []) }}"
                class="w-full inline-flex items-center justify-center gap-3 border border-slate-200 rounded-xl py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition">
                 <svg class="w-5 h-5" viewBox="0 0 48 48" aria-hidden="true">
                     <path fill="#EA4335" d="M24 9.5c3.54 0 6 1.54 7.38 2.83l5.4-5.26C33.64 3.3 29.41 1 24 1 14.82 1 6.99 6.56 3.69 14.22l6.44 5.01C12.06 13.83 17.47 9.5 24 9.5z"/>

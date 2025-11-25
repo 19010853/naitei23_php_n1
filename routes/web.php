@@ -19,9 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [\App\Http\Controllers\CustomerController::class, 'home'])->name('home');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
@@ -71,6 +69,9 @@ Route::get('/categories', [\App\Http\Controllers\CustomerController::class, 'cat
 Route::get('/tours/{tour}', [\App\Http\Controllers\CustomerController::class, 'tours'])
     ->middleware('throttle:60,1')
     ->name('customer.tours');
+Route::get('/tours/{tour}/details', [\App\Http\Controllers\CustomerController::class, 'tourDetails'])
+    ->middleware('throttle:60,1')
+    ->name('customer.tour.details');
 
 Route::get('locale/{locale}', [LanguageController::class, 'changeLanguage'])->name('locale.switch');
 
