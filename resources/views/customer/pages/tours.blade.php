@@ -85,9 +85,20 @@
                         </span>
                     </div>
                 </div>
-                <button class="w-full mt-4 bg-orange-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-orange-600 transition-colors">
-                    {{ __('common.book_now') }}
-                </button>
+                @php
+                    $bookingRoute = route('customer.tours', ['tour' => $tour->id, 'schedule' => $schedule->id]);
+                @endphp
+                @auth
+                    <a href="{{ $bookingRoute }}"
+                       class="block text-center w-full mt-4 bg-orange-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-orange-600 transition-colors">
+                        {{ __('common.book_now') }}
+                    </a>
+                @else
+                    <a href="{{ route('login', ['redirectTo' => $bookingRoute]) }}"
+                       class="block text-center w-full mt-4 bg-orange-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-orange-600 transition-colors">
+                        {{ __('common.book_now') }}
+                    </a>
+                @endauth
             </div>
         </div>
         @empty

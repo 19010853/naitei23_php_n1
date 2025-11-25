@@ -3,17 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\HandlesSocialAuthentication;
+use App\Http\Controllers\Concerns\StoresRedirectIntendedUrl;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
     use HandlesSocialAuthentication;
+    use StoresRedirectIntendedUrl;
 
-    public function redirectToGoogle(): RedirectResponse
+    public function redirectToGoogle(Request $request): RedirectResponse
     {
+        $this->rememberRedirectTo($request);
+
         return Socialite::driver('google')->redirect();
     }
 

@@ -16,6 +16,10 @@
         <form method="POST" action="{{ route('register') }}" class="space-y-5">
             @csrf
 
+            @if(!empty($redirectTo))
+                <input type="hidden" name="redirect_to" value="{{ $redirectTo }}">
+            @endif
+
             <div>
                 <x-label for="name" :value="__('Name')" />
                 <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
@@ -47,7 +51,8 @@
                 </x-button>
                 <p class="text-center text-sm text-slate-500">
                     {{ __('common.already_registered') }}
-                    <a class="font-semibold text-sky-600 hover:text-sky-500" href="{{ route('login') }}">
+                    <a class="font-semibold text-sky-600 hover:text-sky-500"
+                       href="{{ route('login', !empty($redirectTo) ? ['redirectTo' => $redirectTo] : []) }}">
                         {{ __('common.login') }}
                     </a>
                 </p>

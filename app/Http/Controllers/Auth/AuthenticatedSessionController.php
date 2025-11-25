@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Concerns\StoresRedirectIntendedUrl;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
@@ -10,14 +11,18 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
+    use StoresRedirectIntendedUrl;
+
     /**
      * Display the login view.
      *
      * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('auth.login');
+        $redirectTo = $this->rememberRedirectTo($request) ?? $request->session()->get('url.intended');
+
+        return view('auth.login', compact('redirectTo'));
     }
 
     /**
@@ -28,6 +33,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
+        $this->rememberRedirectTo($request);
+
         $request->authenticate();
 
         $request->session()->regenerate();
