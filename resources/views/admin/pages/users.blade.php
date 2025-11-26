@@ -169,6 +169,11 @@
                 
                 // Re-initialize pagination links to use AJAX
                 initializePaginationLinks();
+                
+                // Re-initialize table tooltips
+                if (window.AdminUI && window.AdminUI.initTableTooltips) {
+                    window.AdminUI.initTableTooltips();
+                }
             })
             .catch(error => {
                 console.error('Error loading users:', error);
@@ -226,6 +231,11 @@
                             }
                             initializeUserButtons();
                             initializePaginationLinks();
+                            
+                            // Re-initialize table tooltips
+                            if (window.AdminUI && window.AdminUI.initTableTooltips) {
+                                window.AdminUI.initTableTooltips();
+                            }
                         })
                         .catch(error => {
                             console.error('Error loading users:', error);

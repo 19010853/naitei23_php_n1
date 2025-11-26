@@ -38,6 +38,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('users', [AdminManagementController::class, 'storeUser'])->name('users.store');
         Route::put('users/{user}', [AdminManagementController::class, 'updateUser'])->name('users.update');
         Route::delete('users/{user}', [AdminManagementController::class, 'deleteUser'])->name('users.delete');
+
+        // Tour Categories
+        Route::get('categories', [AdminManagementController::class, 'categories'])->name('categories');
+        Route::post('categories', [AdminManagementController::class, 'storeCategory'])->name('categories.store');
+        Route::put('categories/{category}', [AdminManagementController::class, 'updateCategory'])->name('categories.update');
+        Route::delete('categories/{category}', [AdminManagementController::class, 'deleteCategory'])->name('categories.delete');
         
         // Tours CRUD (thông tin chung)
         Route::get('tours', [AdminManagementController::class, 'tours'])->name('tours');

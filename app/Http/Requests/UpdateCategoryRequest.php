@@ -3,54 +3,41 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
-class UpdateTourRequest extends FormRequest
+class UpdateCategoryRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
-        $tourId = $this->route('tour');
-        if ($tourId instanceof \App\Models\Tour) {
-            $tourId = $tourId->getKey();
+        $categoryId = $this->route('category');
+        if ($categoryId instanceof \App\Models\Category) {
+            $categoryId = $categoryId->getKey();
         }
 
         return [
-            'category_id' => 'required|integer|exists:categories,id',
             'name' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('tours', 'name')->ignore($tourId),
+                Rule::unique('categories', 'name')->ignore($categoryId),
             ],
             'slug' => [
                 'nullable',
                 'string',
                 'max:255',
-                Rule::unique('tours', 'slug')->ignore($tourId),
+                Rule::unique('categories', 'slug')->ignore($categoryId),
             ],
             'description' => 'nullable|string',
-            'location' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 
-    /**
-     * Prepare the data for validation.
-     */
     protected function prepareForValidation(): void
     {
         if ($this->has('name') && !$this->filled('slug')) {
@@ -60,3 +47,5 @@ class UpdateTourRequest extends FormRequest
         }
     }
 }
+
+

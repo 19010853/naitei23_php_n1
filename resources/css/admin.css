@@ -338,6 +338,131 @@ a {
     box-shadow: 0 20px 35px rgba(15, 23, 42, 0.07);
 }
 
+/* Dashboard table wrappers with horizontal scroll */
+.table-wrapper--scrollable {
+    overflow: hidden;
+}
+
+.table-scroll-container {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--traveloka-blue-light) transparent;
+}
+
+.table-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb {
+    background: var(--traveloka-blue-light);
+    border-radius: 4px;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: var(--traveloka-blue);
+}
+
+.table-wrapper--scrollable .admin-table {
+    min-width: 100%;
+    width: max-content;
+}
+
+/* Tooltip for all table cells */
+.admin-table td {
+    position: relative;
+    overflow: visible;
+}
+
+.cell-tooltip {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 14px;
+    background: rgba(15, 23, 42, 0.95);
+    color: #ffffff;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    border-radius: 6px;
+    max-width: 500px;
+    min-width: 120px;
+    max-height: none;
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow: visible;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: left;
+}
+
+.cell-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-bottom-color: rgba(15, 23, 42, 0.95);
+}
+
+/* Show tooltip on hover for all cells (with delay handled by JS) */
+.admin-table td:hover .cell-tooltip.show,
+.cell-ellipsis:hover .cell-tooltip.show,
+.cell-wrap:hover .cell-tooltip.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(2px);
+}
+
+.cell-ellipsis,
+.cell-wrap {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+}
+
+/* Adjust tooltip position for edge cases */
+.admin-table td:first-child .cell-tooltip {
+    left: 0;
+    transform: translateX(0);
+}
+
+.admin-table td:first-child:hover .cell-tooltip.show {
+    transform: translateX(0) translateY(2px);
+}
+
+.admin-table td:first-child .cell-tooltip::after {
+    left: 20px;
+    transform: translateX(0);
+}
+
+.admin-table td:last-child .cell-tooltip {
+    left: auto;
+    right: 0;
+    transform: translateX(0);
+}
+
+.admin-table td:last-child:hover .cell-tooltip.show {
+    transform: translateX(0) translateY(2px);
+}
+
+.admin-table td:last-child .cell-tooltip::after {
+    left: auto;
+    right: 20px;
+    transform: translateX(0);
+}
+
 .table-head {
     padding: 18px 22px;
     display: flex;
@@ -354,6 +479,26 @@ a {
 .admin-table {
     width: 100%;
     border-collapse: collapse;
+}
+
+.admin-table.admin-table--fixed {
+    table-layout: fixed;
+}
+
+.admin-table.admin-table--fixed th,
+.admin-table.admin-table--fixed td {
+    white-space: nowrap;
+}
+
+.admin-table .cell-wrap {
+    white-space: normal !important;
+}
+
+.admin-table .cell-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
 }
 
 .admin-table th {

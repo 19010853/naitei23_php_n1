@@ -30,7 +30,7 @@
                             @endphp
                             <span class="chip">{{ $shortType }}</span>
                         </td>
-                        <td>{{ Str::limit($comment->body, 100) }}</td>
+                        <td data-full-content="{{ $comment->body }}">{{ Str::limit($comment->body, 100) }}</td>
                         <td>{{ optional($comment->created_at)->format('d/m/Y') }}</td>
                     </tr>
                 @empty

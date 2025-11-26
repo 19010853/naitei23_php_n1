@@ -24,16 +24,27 @@
             <div class="table-title">{{ __('common.tour_list') }}</div>
         </div>
         <div style="overflow-x: auto;">
-            <table class="admin-table">
+            <table class="admin-table admin-table--fixed">
+                <colgroup>
+                    <col style="width: 60px">
+                    <col style="width: 100px">
+                    <col style="width: 180px">
+                    <col style="width: 220px">
+                    <col style="width: 150px">
+                    <col style="width: 130px">
+                    <col style="width: 110px">
+                    <col style="width: 170px">
+                </colgroup>
                 <thead>
                     <tr>
-                        <th style="width: 60px; text-align: center;">#</th>
-                        <th style="width: 100px; text-align: center;">{{ __('common.image') }}</th>
-                        <th style="min-width: 200px;">{{ __('common.tour') }}</th>
-                        <th style="width: 140px;">{{ __('common.location') }}</th>
-                        <th style="width: 120px; text-align: center;">{{ __('common.schedules') }}</th>
-                        <th style="width: 100px; text-align: center;">{{ __('common.rating') }}</th>
-                        <th style="width: 160px; text-align: center;">{{ __('common.actions') }}</th>
+                        <th style="text-align: center;">#</th>
+                        <th style="text-align: center;">{{ __('common.image') }}</th>
+                        <th>{{ __('common.category') }}</th>
+                        <th>{{ __('common.tour') }}</th>
+                        <th>{{ __('common.location') }}</th>
+                        <th style="text-align: center;">{{ __('common.schedules') }}</th>
+                        <th style="text-align: center;">{{ __('common.rating') }}</th>
+                        <th style="text-align: center;">{{ __('common.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,11 +60,14 @@
                                 @endif
                             </td>
                             <td>
+                                <span class="badge badge-neutral">{{ $tour->category?->name ?? __('common.not_assigned') }}</span>
+                            </td>
+                            <td class="cell-wrap">
                                 <strong style="display: block; margin-bottom: 4px;">{{ $tour->name }}</strong>
-                                <small style="color: var(--traveloka-muted); line-height: 1.4;">{{ Str::limit($tour->description ?? '', 60) }}</small>
+                                <small style="color: var(--traveloka-muted); line-height: 1.4;" data-full-content="{{ $tour->description ?? '' }}">{{ Str::limit($tour->description ?? '', 60) }}</small>
                             </td>
                             <td>
-                                <span style="display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $tour->location }}</span>
+                                <span class="cell-ellipsis">{{ $tour->location }}</span>
                             </td>
                             <td style="text-align: center;">{{ $tour->schedules_count }} {{ __('common.schedules') }}</td>
                             <td style="text-align: center;">
@@ -67,6 +81,7 @@
                                     <button class="btn btn-warning btn-sm btn-action edit-tour-btn" 
                                             data-tour-id="{{ $tour->id }}"
                                             data-tour-name="{{ $tour->name }}"
+                                            data-tour-category-id="{{ $tour->category_id }}"
                                             data-tour-description="{{ $tour->description ?? '' }}"
                                             data-tour-location="{{ $tour->location }}"
                                             data-tour-image-url="{{ $tour->image_url ?? '' }}"
@@ -123,11 +138,12 @@
             button.addEventListener('click', function() {
                 const tourId = this.getAttribute('data-tour-id');
                 const tourName = this.getAttribute('data-tour-name');
+                const tourCategoryId = this.getAttribute('data-tour-category-id');
                 const tourDescription = this.getAttribute('data-tour-description');
                 const tourLocation = this.getAttribute('data-tour-location');
                 const tourImageUrl = this.getAttribute('data-tour-image-url');
                 
-                editTour(tourId, tourName, tourDescription, tourLocation, tourImageUrl);
+                editTour(tourId, tourName, tourDescription, tourLocation, tourImageUrl, tourCategoryId);
             });
         });
 
@@ -141,7 +157,7 @@
     });
 
     // Edit Tour
-    function editTour(id, name, description, location, imageUrl) {
+    function editTour(id, name, description, location, imageUrl, categoryId) {
         const modal = document.getElementById('editTourModal');
         if (!modal) {
             console.error('Edit tour modal not found');
@@ -166,6 +182,10 @@
         nameInput.value = name || '';
         descriptionInput.value = description || '';
         locationInput.value = location || '';
+        const categorySelect = document.getElementById('edit_tour_category_id');
+        if (categorySelect) {
+            categorySelect.value = categoryId || '';
+        }
         form.action = `/admin/tours/${id}`;
         
         const img = document.getElementById('edit_tour_current_image');

@@ -39,7 +39,8 @@
                             <td style="text-align: center;">{{ $schedule->id }}</td>
                             <td>
                                 <strong style="display: block; margin-bottom: 4px;">{{ $schedule->tour->name ?? 'N/A' }}</strong>
-                                <small style="color: var(--traveloka-muted);">{{ $schedule->tour->location ?? '-' }}</small>
+                                <small style="color: var(--traveloka-muted); display: block;">{{ $schedule->tour->location ?? '-' }}</small>
+                                <small style="color: var(--traveloka-blue);">{{ $schedule->tour?->category?->name ?? __('common.not_assigned') }}</small>
                             </td>
                             <td style="text-align: center;">
                                 {{ $schedule->start_date->format('d/m/Y') }}

@@ -12,6 +12,15 @@
                 <input type="text" name="name" class="form-control" required>
             </div>
             <div class="form-group">
+                <label>{{ __('common.category') }}</label>
+                <select name="category_id" class="form-control" required>
+                    <option value="">{{ __('common.select_category') }}</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
                 <label>{{ __('common.slug') }}</label>
                 <input type="text" name="slug" class="form-control" placeholder="{{ __('common.auto_generate_from_name') }}">
             </div>
@@ -49,6 +58,15 @@
             <div class="form-group">
                 <label>{{ __('common.tour_name') }}</label>
                 <input type="text" name="name" id="edit_tour_name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>{{ __('common.category') }}</label>
+                <select name="category_id" id="edit_tour_category_id" class="form-control" required>
+                    <option value="">{{ __('common.select_category') }}</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group">
                 <label>{{ __('common.slug') }}</label>

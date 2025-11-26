@@ -29,7 +29,7 @@
                         <td>
                             <span class="chip">{{ $review->rating }}/5</span>
                         </td>
-                        <td>{{ Str::limit($review->content, 90) }}</td>
+                        <td data-full-content="{{ $review->content }}">{{ Str::limit($review->content, 90) }}</td>
                         <td>{{ optional($review->created_at)->format('d/m/Y') }}</td>
                     </tr>
                 @empty
