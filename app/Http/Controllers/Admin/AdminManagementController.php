@@ -336,6 +336,64 @@ class AdminManagementController extends Controller
     }
 
     /**
+     * Admin reply to a review (similar to App Store/Google Play Developer Reply)
+     */
+    public function replyToReview(Request $request, Review $review)
+    {
+        $validated = $request->validate([
+            'admin_reply' => 'required|string|max:2000',
+        ]);
+
+        $review->update([
+            'admin_reply' => $validated['admin_reply'],
+            'admin_replied_at' => now(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('common.admin_reply_added_successfully'),
+            'review' => $review->load('user', 'tour')
+        ]);
+    }
+
+    /**
+     * Update admin reply to a review
+     */
+    public function updateAdminReply(Request $request, Review $review)
+    {
+        $validated = $request->validate([
+            'admin_reply' => 'required|string|max:2000',
+        ]);
+
+        $review->update([
+            'admin_reply' => $validated['admin_reply'],
+            'admin_replied_at' => now(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('common.admin_reply_updated_successfully'),
+            'review' => $review->load('user', 'tour')
+        ]);
+    }
+
+    /**
+     * Delete admin reply from a review
+     */
+    public function deleteAdminReply(Review $review)
+    {
+        $review->update([
+            'admin_reply' => null,
+            'admin_replied_at' => null,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('common.admin_reply_deleted_successfully')
+        ]);
+    }
+
+    /**
      * Upload an image file to the specified directory.
      *
      * @param \Illuminate\Http\UploadedFile|null $image The uploaded image file

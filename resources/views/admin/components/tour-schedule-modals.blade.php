@@ -33,18 +33,18 @@
                 <label>{{ __('common.max_participants') }} <span style="color: red;">*</span></label>
                 <input type="number" name="max_participants" class="form-control" required min="1" placeholder="{{ __('common.example_participants') }}">
             </div>
-            <div class="form-group" style="text-align: right; margin-top: 20px; padding-bottom: 20px;">
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('tourScheduleModal').style.display='none'">{{ __('common.cancel') }}</button>
-                <button type="submit" class="btn btn-primary">{{ __('common.add') }}</button>
-            </div>
         </form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('tourScheduleModal').style.display='none'">{{ __('common.cancel') }}</button>
+            <button type="submit" form="tourScheduleForm" class="btn btn-primary">{{ __('common.add') }}</button>
+        </div>
     </div>
 </div>
 
 <!-- Edit Tour Schedule Modal -->
 <div id="editTourScheduleModal" class="modal" style="display: none;">
     <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header modal-header-edit">
             <h3>{{ __('common.edit_schedule') }}</h3>
             <span class="close" onclick="document.getElementById('editTourScheduleModal').style.display='none'">&times;</span>
         </div>
@@ -77,11 +77,11 @@
                 <label>{{ __('common.max_participants') }} <span style="color: red;">*</span></label>
                 <input type="number" name="max_participants" id="edit_schedule_max_participants" class="form-control" required min="1">
             </div>
-            <div class="form-group" style="text-align: right; margin-top: 20px; padding-bottom: 20px;">
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('editTourScheduleModal').style.display='none'">{{ __('common.cancel') }}</button>
-                <button type="submit" class="btn btn-primary">{{ __('common.update') }}</button>
-            </div>
         </form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('editTourScheduleModal').style.display='none'">{{ __('common.cancel') }}</button>
+            <button type="submit" form="editTourScheduleForm" class="btn btn-primary">{{ __('common.update') }}</button>
+        </div>
     </div>
 </div>
 

@@ -7,6 +7,7 @@
     --traveloka-blue-dark: #0456a3;
     --traveloka-blue-light: #e8f2ff;
     --traveloka-orange: #ff8a00;
+    --traveloka-primary: #FF6B35;
     --traveloka-slate: #1f2a37;
     --traveloka-text: #243b53;
     --traveloka-muted: #6b7b93;
@@ -564,6 +565,11 @@ a {
     background: linear-gradient(135deg, var(--traveloka-blue), var(--traveloka-blue-dark));
     color: white;
     box-shadow: 0 10px 20px rgba(11, 116, 222, 0.25);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0c7ce8, #055fb8);
+    box-shadow: 0 12px 24px rgba(11, 116, 222, 0.3);
 }
 
 .btn-secondary {

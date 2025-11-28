@@ -3,9 +3,12 @@
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminManagementController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -61,6 +64,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('payments', [AdminManagementController::class, 'payments'])->name('payments');
         Route::get('reviews', [AdminManagementController::class, 'reviews'])->name('reviews');
         Route::get('comments', [AdminManagementController::class, 'comments'])->name('comments');
+        
+        // Admin reply to reviews
+        Route::post('reviews/{review}/reply', [AdminManagementController::class, 'replyToReview'])->name('reviews.reply');
+        Route::put('reviews/{review}/reply', [AdminManagementController::class, 'updateAdminReply'])->name('reviews.reply.update');
+        Route::delete('reviews/{review}/reply', [AdminManagementController::class, 'deleteAdminReply'])->name('reviews.reply.delete');
     });
 });
 
@@ -89,6 +97,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Review routes
+    Route::post('/tours/{tour}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+    Route::get('/tours/{tour}/reviews/user', [ReviewController::class, 'getUserReview'])->name('reviews.user');
+    
+    // Comment routes (on reviews)
+    Route::post('/reviews/{review}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    
+    // Like routes (on reviews)
+    Route::post('/reviews/{review}/like', [LikeController::class, 'toggle'])->name('likes.toggle');
+    Route::get('/reviews/{review}/like', [LikeController::class, 'check'])->name('likes.check');
 });
 
 require __DIR__.'/auth.php';

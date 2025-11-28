@@ -36,18 +36,18 @@
                 <label>{{ __('common.image') }}</label>
                 <input type="file" name="image" class="form-control" accept="image/*">
             </div>
-            <div style="text-align: right; margin-top: 20px;">
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('tourModal').style.display='none'">{{ __('common.cancel') }}</button>
-                <button type="submit" class="btn btn-primary">{{ __('common.add') }}</button>
-            </div>
         </form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('tourModal').style.display='none'">{{ __('common.cancel') }}</button>
+            <button type="submit" form="tourForm" class="btn btn-primary">{{ __('common.add') }}</button>
+        </div>
     </div>
 </div>
 
 <!-- Edit Tour Modal -->
 <div id="editTourModal" class="modal" style="display: none;">
     <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header modal-header-edit">
             <h3>{{ __('common.edit_tour_modal_title') }}</h3>
             <span class="close" onclick="document.getElementById('editTourModal').style.display='none'">&times;</span>
         </div>
@@ -84,14 +84,14 @@
                 <label>{{ __('common.new_image') }}</label>
                 <input type="file" name="image" class="form-control" accept="image/*">
                 <div style="margin-top: 10px;">
-                    <label>{{ __('common.current_image') }}:</label><br>
-                    <img id="edit_tour_current_image" src="" alt="Current image" style="max-width: 200px; max-height: 200px; margin-top: 10px; display: none; border-radius: 4px;">
+                    <label style="font-size: 13px; color: var(--traveloka-muted, #6b7b93); font-weight: normal;">{{ __('common.current_image') }}:</label><br>
+                    <img id="edit_tour_current_image" src="" alt="Current image" style="max-width: 200px; max-height: 200px; margin-top: 8px; display: none; border-radius: 8px; border: 1px solid var(--traveloka-border, #e4ecf7);">
                 </div>
             </div>
-            <div style="text-align: right; margin-top: 20px;">
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('editTourModal').style.display='none'">{{ __('common.cancel') }}</button>
-                <button type="submit" class="btn btn-primary">{{ __('common.update') }}</button>
-            </div>
         </form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('editTourModal').style.display='none'">{{ __('common.cancel') }}</button>
+            <button type="submit" form="editTourForm" class="btn btn-primary">{{ __('common.update') }}</button>
+        </div>
     </div>
 </div>

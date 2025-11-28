@@ -120,20 +120,30 @@ class CustomerController extends Controller
      */
     public function tourDetails(Tour $tour)
     {
-        $tour->loadAvg('reviews', 'rating')
-            ->loadCount('reviews');
+        $user = auth()->user();
 
+        // Load reviews count and average
+        // Note: average_rating is updated automatically when reviews are created/updated/deleted in ReviewController
+        $tour->loadCount('reviews')
+            ->loadAvg('reviews', 'rating');
+
+        // Load reviews with user, comments, and likes
         $reviews = $tour->reviews()
-            ->with('user')
+            ->with(['user', 'comments.user', 'likes'])
+            ->withCount('likes')
             ->orderBy('created_at', 'desc')
             ->paginate(10, ['*'], 'reviews_page');
 
-        $comments = $tour->comments()
-            ->with('user')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10, ['*'], 'comments_page');
+        // Get user's review if logged in
+        $userReview = null;
+        if ($user) {
+            $userReview = $tour->reviews()
+                ->where('user_id', $user->id)
+                ->with(['user', 'comments.user', 'likes'])
+                ->first();
+        }
 
-        return view('customer.pages.tour-details', compact('tour', 'reviews', 'comments'));
+        return view('customer.pages.tour-details', compact('tour', 'reviews', 'userReview', 'user'));
     }
 }
 

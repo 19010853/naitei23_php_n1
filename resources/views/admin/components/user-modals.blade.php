@@ -31,18 +31,18 @@
                     @endforeach
                 </div>
             </div>
-            <div style="text-align: right; margin-top: 20px; padding: 0 20px 20px;">
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('userModal').style.display='none'">{{ __('common.cancel') }}</button>
-                <button type="submit" class="btn btn-primary">{{ __('common.add') }}</button>
-            </div>
         </form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('userModal').style.display='none'">{{ __('common.cancel') }}</button>
+            <button type="submit" form="userForm" class="btn btn-primary">{{ __('common.add') }}</button>
+        </div>
     </div>
 </div>
 
 <!-- Edit User Modal -->
 <div id="editUserModal" class="modal" style="display: none;">
     <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header modal-header-edit">
             <h3>{{ __('common.edit_user') }}</h3>
             <span class="close" onclick="document.getElementById('editUserModal').style.display='none'">&times;</span>
         </div>
@@ -65,20 +65,20 @@
             </div>
             <div class="form-group">
                 <label>{{ __('common.roles') }} <span style="color: red;">*</span></label>
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
                     @foreach($roles ?? [] as $role)
-                        <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
-                            <input type="checkbox" name="role_ids[]" id="edit_role_{{ $role->id }}" value="{{ $role->id }}" class="form-control" style="width: auto;">
-                            <span>{{ $role->name }}</span>
+                        <label style="display: flex; align-items: center; gap: 10px; font-weight: normal; cursor: pointer; padding: 8px; border-radius: 6px; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f1f5f9'" onmouseout="this.style.backgroundColor='transparent'">
+                            <input type="checkbox" name="role_ids[]" id="edit_role_{{ $role->id }}" value="{{ $role->id }}" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--traveloka-blue, #0b74de);">
+                            <span style="font-size: 14px; color: var(--traveloka-text, #243b53);">{{ $role->name }}</span>
                         </label>
                     @endforeach
                 </div>
             </div>
-            <div style="text-align: right; margin-top: 20px; padding: 0 20px 20px;">
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('editUserModal').style.display='none'">{{ __('common.cancel') }}</button>
-                <button type="submit" class="btn btn-primary">{{ __('common.update') }}</button>
-            </div>
         </form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('editUserModal').style.display='none'">{{ __('common.cancel') }}</button>
+            <button type="submit" form="editUserForm" class="btn btn-primary">{{ __('common.update') }}</button>
+        </div>
     </div>
 </div>
 
