@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminManagementController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\SocialController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
@@ -61,6 +62,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('tour-schedules/{tourSchedule}', [AdminManagementController::class, 'deleteTourSchedule'])->name('tour-schedules.delete');
         
         Route::get('bookings', [AdminManagementController::class, 'bookings'])->name('bookings');
+        Route::get('bookings/export/pdf', [AdminManagementController::class, 'exportBookingsPdf'])->name('bookings.export.pdf');
         Route::get('payments', [AdminManagementController::class, 'payments'])->name('payments');
         Route::get('reviews', [AdminManagementController::class, 'reviews'])->name('reviews');
         Route::get('comments', [AdminManagementController::class, 'comments'])->name('comments');
@@ -86,12 +88,18 @@ Route::get('/tours/{tour}', [\App\Http\Controllers\CustomerController::class, 't
 Route::get('/tours/{tour}/details', [\App\Http\Controllers\CustomerController::class, 'tourDetails'])
     ->middleware('throttle:60,1')
     ->name('customer.tour.details');
+Route::get('/tours/{tour}/details/pdf', [\App\Http\Controllers\CustomerController::class, 'exportTourDetailsPdf'])
+    ->middleware('throttle:60,1')
+    ->name('customer.tour.details.pdf');
 
 Route::get('locale/{locale}', [LanguageController::class, 'changeLanguage'])->name('locale.switch');
 
 // Social authentication routes
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
+
+Route::get('auth/facebook', [SocialController::class, 'redirectToFacebook'])->name('facebook.login');
+Route::get('auth/facebook/callback', [SocialController::class, 'handleFacebookCallback']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
