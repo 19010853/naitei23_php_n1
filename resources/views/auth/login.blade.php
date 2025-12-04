@@ -69,7 +69,7 @@
             <div class="flex-grow border-t border-slate-200"></div>
         </div>
 
-        <div>
+        <div class="space-y-3">
             <a href="{{ route('google.login', !empty($redirectTo) ? ['redirectTo' => $redirectTo] : []) }}"
                class="w-full inline-flex items-center justify-center gap-3 border border-slate-200 rounded-xl py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition">
                 <svg class="w-5 h-5" viewBox="0 0 48 48" aria-hidden="true">
@@ -80,6 +80,14 @@
                     <path fill="none" d="M1 1h46.5v46.5H1z"/>
                 </svg>
                 <span>{{ __('common.login_with_google') }}</span>
+            </a>
+
+            <a href="{{ route('facebook.login', !empty($redirectTo) ? ['redirectTo' => $redirectTo] : []) }}"
+               class="w-full inline-flex items-center justify-center gap-3 rounded-xl py-2.5 text-sm font-semibold text-white bg-[#1877F2] hover:bg-[#166FE0] transition">
+                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white text-[#1877F2]">
+                    <i class="fab fa-facebook-f text-xs"></i>
+                </span>
+                <span>Login with Facebook</span>
             </a>
         </div>
     </x-auth-card>
