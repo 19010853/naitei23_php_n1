@@ -17,6 +17,8 @@
         <div class="admin-shell">
             @include('admin.partials.sidebar')
 
+            <div class="admin-sidebar-backdrop" data-sidebar-toggle></div>
+
             <div class="admin-main">
                 @include('admin.partials.header', [
                     'pageTitle' => trim($__env->yieldContent('page-title')) ?: __('common.admin_dashboard'),

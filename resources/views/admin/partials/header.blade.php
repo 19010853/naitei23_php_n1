@@ -8,9 +8,16 @@
 
 <header class="admin-header">
     <div class="header-left">
-        <div class="header-title">{{ $pageTitle ?? __('common.admin_dashboard') }}</div>
-        <div class="header-breadcrumb">
-            {{ __('common.traveloka_admin') }} • {{ $pageTitle ?? __('common.admin_dashboard') }}
+        <button type="button" class="admin-sidebar-toggle" data-sidebar-toggle aria-label="Toggle sidebar">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div>
+            <div class="header-title">{{ $pageTitle ?? __('common.admin_dashboard') }}</div>
+            <div class="header-breadcrumb">
+                {{ __('common.traveloka_admin') }} • {{ $pageTitle ?? __('common.admin_dashboard') }}
+            </div>
         </div>
     </div>
 
