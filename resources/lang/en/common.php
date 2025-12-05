@@ -371,4 +371,11 @@ return [
     'error_deleting_reply' => 'Error deleting admin reply',
     'error_processing_request' => 'Error processing request',
     'no_content' => 'No content',
+    'password_updated_successfully' => 'Password updated successfully!',
+    'user_created_successfully' => 'User created successfully!',
+    'user_updated_successfully' => 'User updated successfully!',
+    'category_saved_successfully' => 'Tour category saved successfully!',
+    'tour_saved_successfully' => 'Tour saved successfully!',
+    'schedule_saved_successfully' => 'Tour schedule saved successfully!',
+    'review_comment_created' => 'A new review/comment was added!',
 ];

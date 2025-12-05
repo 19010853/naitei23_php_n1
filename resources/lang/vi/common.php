@@ -371,4 +371,11 @@ return [
     'error_deleting_reply' => 'Lỗi khi xóa phản hồi admin',
     'error_processing_request' => 'Lỗi khi xử lý yêu cầu',
     'no_content' => 'Không có nội dung',
+    'password_updated_successfully' => 'Đổi mật khẩu thành công!',
+    'user_created_successfully' => 'Tạo người dùng thành công!',
+    'user_updated_successfully' => 'Cập nhật người dùng thành công!',
+    'category_saved_successfully' => 'Cập nhật danh mục tour thành công!',
+    'tour_saved_successfully' => 'Cập nhật tour thành công!',
+    'schedule_saved_successfully' => 'Cập nhật lịch trình tour thành công!',
+    'review_comment_created' => 'Đã thêm review/comment mới!',
 ];

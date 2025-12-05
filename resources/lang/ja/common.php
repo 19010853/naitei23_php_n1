@@ -304,4 +304,11 @@ return [
     'min_participant_too_low' => '最低参加者数が低すぎます',
     'max_participant_too_high' => '最大参加者数が高すぎます',
     'participant_diff_too_small' => '差は少なくとも1人である必要があります',
+'password_updated_successfully' => 'パスワードを更新しました。',
+'user_created_successfully' => 'ユーザーを作成しました。',
+'user_updated_successfully' => 'ユーザーを更新しました。',
+'category_saved_successfully' => 'ツアーカテゴリーを更新しました。',
+'tour_saved_successfully' => 'ツアーを更新しました。',
+'schedule_saved_successfully' => 'ツアースケジュールを更新しました。',
+'review_comment_created' => '新しいレビュー/コメントが追加されました。',
 ];

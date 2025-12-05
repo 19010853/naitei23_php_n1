@@ -17,6 +17,7 @@
     @stack('styles')
 </head>
 <body class="font-sans antialiased">
+    @include('components.flash-message')
     @include('customer.components.header')
 
     @yield('hero')

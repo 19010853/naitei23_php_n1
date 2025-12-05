@@ -29,107 +29,91 @@
         @endforeach
     </div>
 
-    <div class="grid" style="margin-top: 30px; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 22px;">
-        <div class="table-wrapper table-wrapper--scrollable">
-            <div class="table-head">
-                <div class="table-title">{{ __('common.recent_bookings') }}</div>
-                <span class="chip">5 {{ __('common.bookings') }}</span>
+    <div class="dashboard-panels">
+        <div class="panel-card">
+            <div class="panel-head">
+                <div>
+                    <p class="panel-title">{{ __('common.recent_bookings') }}</p>
+                    <p class="panel-subtitle">{{ __('common.realtime_update') }}</p>
+                </div>
+                <span class="chip chip-soft">5 {{ __('common.bookings') }}</span>
             </div>
-            <div class="table-scroll-container">
-                <table class="admin-table" style="min-width: 600px;">
-                    <colgroup>
-                        <col style="width: 200px;">
-                        <col style="width: 200px;">
-                        <col style="width: 120px;">
-                        <col style="width: 120px;">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>{{ __('common.customer') }}</th>
-                            <th>{{ __('common.tour') }}</th>
-                            <th>{{ __('common.departure_date') }}</th>
-                            <th>{{ __('common.status') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($recentBookings as $booking)
-                            <tr>
-                                <td>
-                                    <strong>{{ $booking->user->name ?? __('common.anonymous') }}</strong><br>
-                                    <small style="color: var(--traveloka-muted);">{{ $booking->user->email ?? '-' }}</small>
-                                </td>
-                                <td>
-                                    {{ $booking->tourSchedule->tour->name ?? __('common.tour') }}<br>
-                                    <small style="color: var(--traveloka-muted);">{{ $booking->tourSchedule->tour->location ?? '-' }}</small>
-                                </td>
-                                <td>
-                                    {{ optional($booking->tourSchedule->start_date)->format('d/m/Y') ?? 'N/A' }}
-                                </td>
-                                <td>
-                                    <span class="status-badge status-{{ $booking->status === 'completed' ? 'success' : ($booking->status === 'cancelled' ? 'cancelled' : 'pending') }}">
-                                        {{ __("common.{$booking->status}") }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="empty-state">{{ __('common.no_bookings') }}</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+
+            <div class="panel-list">
+                @forelse ($recentBookings as $booking)
+                    <div class="panel-row">
+                        <div class="panel-col panel-col--user">
+                            <div class="avatar-circle">{{ Str::upper(Str::substr($booking->user->name ?? 'C', 0, 1)) }}</div>
+                            <div>
+                                <div class="text-strong">{{ $booking->user->name ?? __('common.anonymous') }}</div>
+                                <div class="text-dim">{{ $booking->user->email ?? '-' }}</div>
+                            </div>
+                        </div>
+                        <div class="panel-col panel-col--tour">
+                            <div class="text-strong">{{ $booking->tourSchedule->tour->name ?? __('common.tour') }}</div>
+                            <div class="text-dim">{{ $booking->tourSchedule->tour->location ?? '-' }}</div>
+                        </div>
+                        <div class="panel-col">
+                            <div class="pill-muted">
+                                <i class="far fa-calendar-alt"></i>
+                                {{ optional($booking->tourSchedule->start_date)->format('d/m/Y') ?? 'N/A' }}
+                            </div>
+                        </div>
+                        <div class="panel-col panel-col--status">
+                            <span class="status-badge status-{{ $booking->status === 'completed' ? 'success' : ($booking->status === 'cancelled' ? 'cancelled' : 'pending') }}">
+                                {{ __("common.{$booking->status}") }}
+                            </span>
+                        </div>
+                    </div>
+                @empty
+                    <div class="empty-state">{{ __('common.no_bookings') }}</div>
+                @endforelse
             </div>
         </div>
 
-        <div class="table-wrapper table-wrapper--scrollable">
-            <div class="table-head">
-                <div class="table-title">{{ __('common.top_tours_by_rating') }}</div>
-                <span class="chip">{{ __('common.realtime_update') }}</span>
+        <div class="panel-card">
+            <div class="panel-head">
+                <div>
+                    <p class="panel-title">{{ __('common.top_tours_by_rating') }}</p>
+                    <p class="panel-subtitle">{{ __('common.realtime_update') }}</p>
+                </div>
             </div>
-        <div class="table-scroll-container">
-            <table class="admin-table" style="min-width: 700px;">
-                    <colgroup>
-                        <col style="width: 220px;">
-                        <col style="width: 150px;">
-                        <col style="width: 100px;">
-                        <col style="width: 130px;">
-                        <col style="width: 100px;">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>{{ __('common.tour') }}</th>
-                            <th>{{ __('common.location') }}</th>
-                            <th>{{ __('common.schedules') }}</th>
-                            <th>{{ __('common.rating') }}</th>
-                            <th>{{ __('common.likes') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($topTours as $tour)
-                            <tr>
-                                <td>
-                                    <strong>{{ $tour->name }}</strong>
-                                    <br>
-                                    <small style="color: var(--traveloka-muted);" data-full-content="{{ $tour->description ?? '' }}">{{ Str::limit($tour->description ?? '', 50) }}</small>
-                                </td>
-                                <td>{{ $tour->location }}</td>
-                                <td>{{ $tour->schedules_count }} {{ __('common.schedules') }}</td>
-                                <td>
-                                    <span style="display: inline-flex; align-items: center; gap: 4px;">
-                                        <i class="fas fa-star" style="color: var(--traveloka-orange);"></i>
-                                        {{ number_format((float) ($tour->reviews_avg_rating ?? 0), 1) }}/5
-                                        <small style="color: var(--traveloka-muted);">({{ number_format($tour->reviews_count) }})</small>
-                                    </span>
-                                </td>
-                                <td>{{ number_format($tour->likes_count) }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="empty-state">{{ __('common.no_data') }}</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+
+            <div class="panel-list">
+                @forelse ($topTours as $tour)
+                    <div class="panel-row">
+                        <div class="panel-col panel-col--tour">
+                            <div class="text-strong">{{ $tour->name }}</div>
+                            <div class="text-dim" data-full-content="{{ $tour->description ?? '' }}">{{ Str::limit($tour->description ?? '', 60) }}</div>
+                        </div>
+                        <div class="panel-col">
+                            <div class="pill-muted">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ $tour->location }}
+                            </div>
+                        </div>
+                        <div class="panel-col">
+                            <div class="pill-soft">
+                                {{ $tour->schedules_count }} {{ __('common.schedules') }}
+                            </div>
+                        </div>
+                        <div class="panel-col panel-col--rating">
+                            <div class="rating-chip">
+                                <i class="fas fa-star"></i>
+                                {{ number_format((float) ($tour->reviews_avg_rating ?? 0), 1) }}
+                                <span class="text-dim">({{ number_format($tour->reviews_count) }})</span>
+                            </div>
+                        </div>
+                        <div class="panel-col panel-col--likes">
+                            <div class="pill-muted">
+                                <i class="far fa-heart"></i>
+                                {{ number_format($tour->likes_count) }}
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="empty-state">{{ __('common.no_data') }}</div>
+                @endforelse
             </div>
         </div>
     </div>

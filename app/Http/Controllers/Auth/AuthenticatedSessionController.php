@@ -42,10 +42,10 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
 
         if ($user && $user->hasRole('Admin')) {
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->intended(route('admin.dashboard'))->with('success', 'Đăng nhập thành công!');
         }
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()->intended(RouteServiceProvider::HOME)->with('success', 'Đăng nhập thành công!');
     }
 
     /**
@@ -62,6 +62,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/')->with('success', 'Đăng xuất thành công!');
     }
 }

@@ -13,12 +13,6 @@
         </button>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success" style="margin-bottom: 20px;">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <div class="table-wrapper">
         <div class="table-head">
             <div class="table-title">{{ __('common.tour_list') }}</div>

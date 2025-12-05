@@ -3,10 +3,10 @@ import './bootstrap';
 const AdminUI = {
     // Store timeout IDs for tooltip cleanup (moved to object scope to prevent memory leaks)
     tooltipTimeouts: new WeakMap(),
-    
+
     // Constants
     TOOLTIP_DELAY: 1000, // 1 second delay before showing tooltip
-    
+
     init() {
         this.bindSidebarToggle();
         this.bindDropdowns();
@@ -21,20 +21,36 @@ const AdminUI = {
     bindSidebarToggle() {
         const shell = document.querySelector('.admin-shell');
         const toggles = document.querySelectorAll('[data-sidebar-toggle]');
+        const toggleButton = document.querySelector('.admin-sidebar-toggle');
 
         if (!shell || !toggles.length) {
             return;
         }
 
-        const toggleSidebar = () => {
-            shell.classList.toggle('sidebar-open');
+        const setSidebarState = (open) => {
+            shell.classList.toggle('sidebar-open', open);
+            if (toggleButton) {
+                toggleButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+            }
         };
+
+        // Start closed by default
+        setSidebarState(false);
+
+        const toggleSidebar = () => setSidebarState(!shell.classList.contains('sidebar-open'));
+        const closeSidebar = () => setSidebarState(false);
 
         toggles.forEach((btn) => {
             btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 toggleSidebar();
             });
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeSidebar();
+            }
         });
     },
 
@@ -130,7 +146,7 @@ const AdminUI = {
             } else if (child.nodeType === Node.ELEMENT_NODE) {
                 // Skip buttons, action elements, and tooltips
                 const tagName = child.tagName.toLowerCase();
-                if (!child.classList.contains('btn-action') && 
+                if (!child.classList.contains('btn-action') &&
                     !child.classList.contains('cell-tooltip') &&
                     tagName !== 'button' &&
                     tagName !== 'script' &&
@@ -149,10 +165,10 @@ const AdminUI = {
             if (!table) return;
 
             const cells = table.querySelectorAll('tbody td');
-            
+
             cells.forEach((cell) => {
                 // Skip action buttons or empty states
-                if (cell.querySelector('.btn-action') || 
+                if (cell.querySelector('.btn-action') ||
                     cell.querySelector('button') ||
                     cell.classList.contains('empty-state')) {
                     return;
@@ -163,7 +179,7 @@ const AdminUI = {
                 if (existingTooltip) {
                     existingTooltip.remove();
                 }
-                
+
                 // Clear any existing timeout
                 const existingTimeout = AdminUI.tooltipTimeouts.get(cell);
                 if (existingTimeout) {
@@ -173,7 +189,7 @@ const AdminUI = {
 
                 // Check if cell or any child element has data-full-content attribute (for server-side truncated content)
                 let fullText = cell.getAttribute('data-full-content');
-                
+
                 // Check nested elements for data-full-content
                 if (!fullText || fullText.trim() === '') {
                     const nestedElement = cell.querySelector('[data-full-content]');
@@ -181,12 +197,12 @@ const AdminUI = {
                         fullText = nestedElement.getAttribute('data-full-content');
                     }
                 }
-                
+
                 // If no data attribute, get text from cell content
                 if (!fullText || fullText.trim() === '') {
                     fullText = AdminUI.extractCellText(cell);
                 }
-                
+
                 // Skip empty cells or cells with only whitespace
                 if (!fullText || fullText.trim().length === 0) return;
 
@@ -194,13 +210,13 @@ const AdminUI = {
                 const tooltip = document.createElement('div');
                 tooltip.className = 'cell-tooltip';
                 tooltip.textContent = fullText.trim();
-                
+
                 // Add tooltip to cell
                 cell.style.position = 'relative';
                 cell.appendChild(tooltip);
 
                 // Add hover event listeners with delay
-                cell.addEventListener('mouseenter', function() {
+                cell.addEventListener('mouseenter', function () {
                     // Clear any existing timeout
                     const existingTimeout = AdminUI.tooltipTimeouts.get(cell);
                     if (existingTimeout) {
@@ -215,7 +231,7 @@ const AdminUI = {
                     AdminUI.tooltipTimeouts.set(cell, timeoutId);
                 });
 
-                cell.addEventListener('mouseleave', function() {
+                cell.addEventListener('mouseleave', function () {
                     // Clear timeout if user leaves before delay
                     const timeoutId = AdminUI.tooltipTimeouts.get(cell);
                     if (timeoutId) {
@@ -290,11 +306,20 @@ const AdminUI = {
                 }, { once: true });
             }, 1000);
 
-            // Allow user to dismiss earlier by click
-            message.addEventListener('click', () => {
+            const hideNow = () => {
                 clearTimeout(hideTimeout);
                 message.classList.add('is-hiding');
-            });
+            };
+
+            // Allow user to dismiss earlier by clicking message or close button
+            message.addEventListener('click', hideNow);
+            const closeBtn = message.querySelector('[data-close-flash]');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    hideNow();
+                });
+            }
         });
     },
 

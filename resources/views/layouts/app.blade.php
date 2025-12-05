@@ -10,6 +10,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-slate-50 traveloka-gradient min-h-screen">
+        @include('components.flash-message')
         <div class="min-h-screen bg-transparent">
             @include('layouts.navigation')
 

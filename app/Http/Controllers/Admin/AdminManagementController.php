@@ -95,7 +95,7 @@ class AdminManagementController extends Controller
         $user = User::create($validated);
         $user->roles()->attach($roleIds);
 
-        return redirect()->route('admin.users')->with('success', 'Tạo người dùng thành công!');
+        return redirect()->route('admin.users')->with('success', __('common.user_created_successfully'));
     }
 
     /**
@@ -117,13 +117,13 @@ class AdminManagementController extends Controller
         $user->update($validated);
         $user->roles()->sync($roleIds);
 
-        return redirect()->route('admin.users')->with('success', 'Cập nhật người dùng thành công!');
+        return redirect()->route('admin.users')->with('success', __('common.user_updated_successfully'));
     }
 
     /**
      * Remove the specified user
      */
-    public function deleteUser(User $user)
+    public function deleteUser(Request $request, User $user)
     {
         // Prevent deletion of current logged in user
         if ($user->id === auth()->id()) {
@@ -134,6 +134,10 @@ class AdminManagementController extends Controller
         }
 
         $user->delete();
+
+        if (! $request->ajax() && ! $request->expectsJson()) {
+            session()->flash('success', __('common.user_deleted_successfully'));
+        }
 
         return response()->json([
             'success' => true,
@@ -163,7 +167,7 @@ class AdminManagementController extends Controller
 
         Category::create($validated);
 
-        return redirect()->route('admin.categories')->with('success', 'Cập nhật danh mục tour thành công!');
+        return redirect()->route('admin.categories')->with('success', __('common.category_saved_successfully'));
     }
 
     public function updateCategory(UpdateCategoryRequest $request, Category $category)
@@ -176,10 +180,10 @@ class AdminManagementController extends Controller
 
         $category->update($validated);
 
-        return redirect()->route('admin.categories')->with('success', 'Cập nhật danh mục tour thành công!');
+        return redirect()->route('admin.categories')->with('success', __('common.category_saved_successfully'));
     }
 
-    public function deleteCategory(Category $category)
+    public function deleteCategory(Request $request, Category $category)
     {
         if ($category->tours()->exists()) {
             return response()->json([
@@ -190,6 +194,10 @@ class AdminManagementController extends Controller
 
         $this->deleteImage($category->image_url);
         $category->delete();
+
+        if (! $request->ajax() && ! $request->expectsJson()) {
+            session()->flash('success', __('common.category_deleted_successfully'));
+        }
 
         return response()->json([
             'success' => true,
@@ -223,7 +231,7 @@ class AdminManagementController extends Controller
 
         Tour::create($validated);
 
-        return redirect()->route('admin.tours')->with('success', 'Cập nhật tour thành công!');
+        return redirect()->route('admin.tours')->with('success', __('common.tour_saved_successfully'));
     }
 
     public function updateTour(UpdateTourRequest $request, Tour $tour)
@@ -236,10 +244,10 @@ class AdminManagementController extends Controller
 
         $tour->update($validated);
 
-        return redirect()->route('admin.tours')->with('success', 'Cập nhật tour thành công!');
+        return redirect()->route('admin.tours')->with('success', __('common.tour_saved_successfully'));
     }
 
-    public function deleteTour(Tour $tour)
+    public function deleteTour(Request $request, Tour $tour)
     {
         // Prevent deletion if tour has associated schedules
             if ($tour->schedules()->count() > 0) {
@@ -251,6 +259,10 @@ class AdminManagementController extends Controller
 
         $this->deleteImage($tour->image_url);
         $tour->delete();
+
+        if (! $request->ajax() && ! $request->expectsJson()) {
+            session()->flash('success', __('common.tour_deleted_successfully'));
+        }
 
             return response()->json(['success' => true, 'message' => __('common.tour_deleted_successfully')]);
     }
@@ -274,7 +286,7 @@ class AdminManagementController extends Controller
         $validated = $request->validated();
             TourSchedule::create($validated);
 
-            return redirect()->route('admin.tour-schedules')->with('success', 'Cập nhật lịch trình tour thành công!');
+            return redirect()->route('admin.tour-schedules')->with('success', __('common.schedule_saved_successfully'));
     }
 
     public function updateTourSchedule(UpdateTourScheduleRequest $request, TourSchedule $tourSchedule)
@@ -282,10 +294,10 @@ class AdminManagementController extends Controller
         $validated = $request->validated();
             $tourSchedule->update($validated);
 
-            return redirect()->route('admin.tour-schedules')->with('success', 'Cập nhật lịch trình tour thành công!');
+            return redirect()->route('admin.tour-schedules')->with('success', __('common.schedule_saved_successfully'));
     }
 
-    public function deleteTourSchedule(TourSchedule $tourSchedule)
+    public function deleteTourSchedule(Request $request, TourSchedule $tourSchedule)
     {
         // Prevent deletion if schedule has associated bookings
             if ($tourSchedule->bookings()->count() > 0) {
@@ -296,6 +308,10 @@ class AdminManagementController extends Controller
             }
 
         $tourSchedule->delete();
+
+        if (! $request->ajax() && ! $request->expectsJson()) {
+            session()->flash('success', __('common.schedule_deleted_successfully'));
+        }
 
             return response()->json(['success' => true, 'message' => __('common.schedule_deleted_successfully')]);
     }

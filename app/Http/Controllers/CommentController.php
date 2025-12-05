@@ -37,12 +37,11 @@ class CommentController extends Controller
         $comment->load('user');
 
         // Flash message for admin notification (will be shown when admin visits comments page)
-        // Store in session with a key that admin can check
         session()->flash('new_comment_notification', true);
-        session()->flash('new_comment_message', 'Đã thêm review/comment mới!');
+        session()->flash('new_comment_message', __('common.review_comment_created'));
 
         if (! $request->expectsJson()) {
-            $request->session()->flash('success', 'Đã thêm bình luận thành công!');
+            $request->session()->flash('success', __('common.comment_created_successfully'));
 
             return redirect()->back();
         }
