@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -449,12 +450,12 @@ class AdminManagementController extends Controller
     }
 
     /**
-     * Upload an image file to the specified directory.
+     * Upload an image file to S3.
      *
      * @param \Illuminate\Http\UploadedFile|null $image The uploaded image file
-     * @param string $directory The target directory path (relative to public)
-     * @param string|null $oldPath Optional path to old image to delete
-     * @return string|null The relative path to the uploaded image, or null if no image provided
+     * @param string $directory The target directory path (e.g., 'images/tours' or 'images/categories')
+     * @param string|null $oldPath Optional path to old image to delete from S3
+     * @return string|null The full path to the uploaded image in S3, or null if no image provided
      * @throws \Exception If file operations fail
      */
     private function uploadImage(?UploadedFile $image, string $directory, ?string $oldPath = null): ?string
@@ -463,39 +464,63 @@ class AdminManagementController extends Controller
             return null;
         }
 
+        // Delete old image if exists
         $this->deleteImage($oldPath);
 
         try {
-            $imageDir = public_path($directory);
-            if (!File::exists($imageDir)) {
-                File::makeDirectory($imageDir, 0755, true);
-            }
-
+            // Generate unique filename
             $imageName = Str::uuid() . '.' . $image->guessExtension();
-            $image->move($imageDir, $imageName);
-
-            return $directory . '/' . $imageName;
+            
+            // Full path in S3
+            $s3Path = $directory . '/' . $imageName;
+            
+            // Upload to S3
+            Storage::disk('s3')->put($s3Path, file_get_contents($image->getRealPath()), 'public');
+            
+            // Return the S3 path (will be used to store in database)
+            return $s3Path;
         } catch (\Exception $e) {
-            \Log::error('Failed to upload image: ' . $e->getMessage());
+            \Log::error('Failed to upload image to S3: ' . $e->getMessage());
             throw new \Exception('Failed to upload image: ' . $e->getMessage());
         }
     }
 
     /**
-     * Delete an image file from the public directory.
+     * Delete an image file from S3.
      *
-     * @param string|null $path The relative path to the image file
+     * @param string|null $path The S3 path to the image file
      * @return void
      */
     private function deleteImage(?string $path): void
     {
-        if ($path && File::exists(public_path($path))) {
+        if ($path && Storage::disk('s3')->exists($path)) {
             try {
-                File::delete(public_path($path));
+                Storage::disk('s3')->delete($path);
             } catch (\Exception $e) {
-                \Log::error('Failed to delete image: ' . $e->getMessage());
+                \Log::error('Failed to delete image from S3: ' . $e->getMessage());
             }
         }
+    }
+
+    /**
+     * Get the full URL for an image stored in S3.
+     *
+     * @param string|null $path The S3 path to the image
+     * @return string|null The full URL to the image, or null if path is empty
+     */
+    public static function getImageUrl(?string $path): ?string
+    {
+        if (!$path) {
+            return null;
+        }
+
+        // If path already contains http/https, return as is (for backward compatibility)
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        // Get URL from S3
+        return Storage::disk('s3')->url($path);
     }
 }
 
