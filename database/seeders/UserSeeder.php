@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Hash;
 class UserSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed tài khoản admin và một tài khoản customer mẫu.
+     *
+     * - Gắn role tương ứng cho từng user (Admin / Customer).
      *
      * @return void
      */

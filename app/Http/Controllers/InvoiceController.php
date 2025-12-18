@@ -13,6 +13,9 @@ class InvoiceController extends Controller
 {
     /**
      * Download invoice PDF (English only, as before).
+     *
+     * - Chỉ chủ sở hữu payment mới được tải (authorize qua policy).
+     * - Luôn dùng locale en để bố cục/format invoice ổn định.
      */
     public function download(Request $request, Payment $payment)
     {
@@ -39,6 +42,9 @@ class InvoiceController extends Controller
 
     /**
      * Generate PDF for payment (English only).
+     *
+     * - Eager load đầy đủ booking, tour, customer để tránh N+1.
+     * - Dùng view 'customer.pdf.invoice' làm template.
      */
     protected function generatePdf(Payment $payment): \Barryvdh\DomPDF\PDF
     {
@@ -78,6 +84,8 @@ class InvoiceController extends Controller
 
     /**
      * Get invoice file name (no language suffix).
+     *
+     * Đặt tên file theo invoice_id cho dễ tìm kiếm / tra cứu.
      */
     protected function getInvoiceFileName(Payment $payment): string
     {

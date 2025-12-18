@@ -9,7 +9,10 @@ use Illuminate\Database\Seeder;
 class RolePermissionSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Gán các quyền (permissions) cho từng role (Admin, Customer).
+     *
+     * - Admin: có toàn bộ quyền.
+     * - Customer: chỉ có các quyền xem/đặt/hủy booking và xem tour.
      *
      * @return void
      */

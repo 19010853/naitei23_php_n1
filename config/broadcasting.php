@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình broadcast (websocket / real-time event) cho ứng dụng.
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Broadcaster

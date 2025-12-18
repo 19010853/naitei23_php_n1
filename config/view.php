@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình hệ thống view (đường dẫn load Blade, nơi lưu view đã compile).
 return [
-
     /*
     |--------------------------------------------------------------------------
     | View Storage Paths

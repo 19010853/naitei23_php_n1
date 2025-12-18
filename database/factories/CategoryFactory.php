@@ -7,11 +7,15 @@ use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
+ *
+ * Factory sinh dữ liệu giả cho Category (tên, slug, mô tả, ảnh minh hoạ).
  */
 class CategoryFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * Định nghĩa trạng thái mặc định của Category.
+     *
+     * - Lấy ngẫu nhiên một tên category từ danh sách cố định để dữ liệu dễ đọc hơn.
      *
      * @return array<string, mixed>
      */

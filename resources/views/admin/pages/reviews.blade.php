@@ -68,10 +68,6 @@
                 @endforelse
             </tbody>
         </table>
-
-        <div class="pagination">
-            {{ $reviews->links() }}
-        </div>
     </div>
 
     <!-- Admin Reply Modal -->

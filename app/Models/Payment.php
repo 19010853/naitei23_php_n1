@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Model Payment.
+ *
+ * Lưu thông tin thanh toán cho một booking (số tiền, trạng thái, thông tin Stripe, invoice...).
+ */
 class Payment extends Model
 {
     use HasFactory;
@@ -29,13 +34,18 @@ class Payment extends Model
         'payment_date' => 'datetime',
     ];
 
+    /**
+     * Payment thuộc về một Booking.
+     */
     public function booking(): BelongsTo
     {
         return $this->belongsTo(Booking::class, 'booking_id');
     }
 
     /**
-     * Generate unique invoice ID
+     * Sinh mã invoice_id duy nhất cho mỗi Payment.
+     *
+     * Định dạng: INV-YYYYMMDD-XXXXXX (6 ký tự hex cuối của uniqid, viết hoa).
      */
     public static function generateInvoiceId(): string
     {
@@ -47,7 +57,7 @@ class Payment extends Model
     }
 
     /**
-     * Boot method to auto-generate invoice_id when payment is created
+     * Hook boot để tự động sinh invoice_id khi tạo Payment mới nếu chưa có.
      */
     protected static function boot()
     {

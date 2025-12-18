@@ -13,7 +13,9 @@ use Illuminate\Support\Str;
 class BookingSeeder extends Seeder
 {
     /**
-     * Seed demo bookings & payments to preview admin screens.
+     * Seed dữ liệu demo Booking & Payment để xem thử giao diện admin.
+     *
+     * - Yêu cầu đã có user & tour schedules trước (UserSeeder, TourSeeder).
      *
      * @return void
      */

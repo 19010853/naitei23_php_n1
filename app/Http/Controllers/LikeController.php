@@ -10,37 +10,18 @@ use Illuminate\Support\Facades\Auth;
 class LikeController extends Controller
 {
     /**
-     * Toggle like on a review (like if not liked, unlike if already liked).
+     * Toggle like trên một review (like nếu chưa like, bỏ like nếu đã like).
+     *
+     * - Yêu cầu user đăng nhập.
      */
     public function toggle(Request $request, Review $review)
     {
-        $user = Auth::user();
-
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => __('common.please_login_to_like')
-            ], 401);
+        $user = $this->requireAuthenticatedUserToLike();
+        if ($user instanceof \Illuminate\Http\JsonResponse) {
+            return $user;
         }
 
-        $existingLike = Like::where('user_id', $user->id)
-            ->where('likeable_id', $review->id)
-            ->where('likeable_type', Review::class)
-            ->first();
-
-        if ($existingLike) {
-            // Unlike (remove like)
-            $existingLike->delete();
-            $isLiked = false;
-        } else {
-            // Like (create like)
-            Like::create([
-                'user_id' => $user->id,
-                'likeable_id' => $review->id,
-                'likeable_type' => Review::class,
-            ]);
-            $isLiked = true;
-        }
+        [$isLiked] = $this->toggleLikeForReview($user->id, $review);
 
         $likesCount = $review->likes()->count();
 
@@ -53,7 +34,9 @@ class LikeController extends Controller
     }
 
     /**
-     * Check if user has liked a review.
+     * Kiểm tra user hiện tại đã like review hay chưa.
+     *
+     * - Nếu chưa đăng nhập: luôn trả về is_liked = false.
      */
     public function check(Review $review)
     {
@@ -75,5 +58,51 @@ class LikeController extends Controller
             'is_liked' => $isLiked,
             'likes_count' => $likesCount
         ]);
+    }
+
+    /**
+     * Bắt buộc user đăng nhập khi thao tác like/unlike.
+     */
+    protected function requireAuthenticatedUserToLike()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => __('common.please_login_to_like'),
+            ], 401);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Thực hiện toggle like trên review cho một user cụ thể.
+     *
+     * @return array{0: bool} Trả về [isLikedSauKhiToggle]
+     */
+    protected function toggleLikeForReview(int $userId, Review $review): array
+    {
+        $existingLike = Like::where('user_id', $userId)
+            ->where('likeable_id', $review->id)
+            ->where('likeable_type', Review::class)
+            ->first();
+
+        if ($existingLike) {
+            // Unlike (remove like)
+            $existingLike->delete();
+            $isLiked = false;
+        } else {
+            // Like (create like)
+            Like::create([
+                'user_id' => $userId,
+                'likeable_id' => $review->id,
+                'likeable_type' => Review::class,
+            ]);
+            $isLiked = true;
+        }
+
+        return [$isLiked];
     }
 }

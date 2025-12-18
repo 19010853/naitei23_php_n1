@@ -8,7 +8,10 @@ use Illuminate\Support\ServiceProvider;
 class BroadcastServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap any application services.
+     * Khởi động các dịch vụ broadcast (Realtime events).
+     *
+     * - Đăng ký route cho kênh broadcast.
+     * - Load file định nghĩa channels (routes/channels.php).
      *
      * @return void
      */

@@ -8,11 +8,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Comment>
+ *
+ * Factory sinh dữ liệu giả cho Comment (bình luận cho tour).
  */
 class CommentFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * Định nghĩa trạng thái mặc định của Comment.
+     *
+     * - Gán commentable là một Tour bất kỳ để tạo dữ liệu demo.
      *
      * @return array<string, mixed>
      */

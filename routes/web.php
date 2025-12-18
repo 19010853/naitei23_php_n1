@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\AdminManagementController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\SocialController;
+use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
@@ -17,9 +17,12 @@ use Illuminate\Support\Facades\Route;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| Định nghĩa các route web (HTML) cho ứng dụng.
+| Bao gồm:
+| - Khu vực admin (prefix 'admin', middleware 'auth' + 'admin')
+| - Route khách hàng (tours, booking, review/comment/like)
+| - Social login (Google, Facebook)
+| - Các route profile, invoice, payment history...
 |
 */
 
@@ -128,8 +131,8 @@ Route::get('locale/{locale}', [LanguageController::class, 'changeLanguage'])->na
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
 
-Route::get('auth/facebook', [SocialController::class, 'redirectToFacebook'])->name('facebook.login');
-Route::get('auth/facebook/callback', [SocialController::class, 'handleFacebookCallback']);
+Route::get('auth/facebook', [FacebookController::class, 'redirectToFacebook'])->name('facebook.login');
+Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebookCallback']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Model UserBankAccount.
+ *
+ * Lưu thông tin tài khoản ngân hàng của user (tên ngân hàng, số tài khoản, tài khoản mặc định).
+ */
 class UserBankAccount extends Model
 {
     use HasFactory;
@@ -22,6 +27,9 @@ class UserBankAccount extends Model
         'is_default' => 'boolean',
     ];
 
+    /**
+     * Tài khoản ngân hàng thuộc về một user.
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

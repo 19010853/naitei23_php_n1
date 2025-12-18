@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Artisan;
 | Console Routes
 |--------------------------------------------------------------------------
 |
-| This file is where you may define all of your Closure based console
-| commands. Each Closure is bound to a command instance allowing a
-| simple approach to interacting with each command's IO methods.
+| Định nghĩa các lệnh Artisan dạng Closure.
+| Mỗi Closure được bind với instance command, cho phép tương tác IO đơn giản.
 |
 */
 
+// Lệnh ví dụ: in ra một câu quote truyền cảm hứng.
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');

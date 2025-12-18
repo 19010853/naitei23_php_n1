@@ -19,7 +19,7 @@
         </div>
     @endif
 
-    <div class="table-wrapper">
+        <div class="table-wrapper">
         <div class="table-head">
             <div class="table-title">{{ __('common.tour_categories') }}</div>
         </div>
@@ -86,10 +86,6 @@
                     @endforelse
                 </tbody>
             </table>
-        </div>
-
-        <div class="pagination">
-            {{ $categories->links() }}
         </div>
     </div>
 

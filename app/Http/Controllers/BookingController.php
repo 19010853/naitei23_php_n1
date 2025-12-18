@@ -22,6 +22,8 @@ class BookingController extends Controller
 
     /**
      * Show booking form
+     *
+     * Hiển thị form đặt tour cho lịch cụ thể, đồng thời chặn trường hợp đã full chỗ.
      */
     public function show(Request $request, TourSchedule $schedule)
     {
@@ -37,6 +39,8 @@ class BookingController extends Controller
 
     /**
      * Process booking and create Stripe checkout session
+     *
+     * Xử lý tạo Booking + Payment và khởi tạo phiên thanh toán Stripe.
      */
     public function store(Request $request, TourSchedule $schedule)
     {
@@ -141,6 +145,8 @@ class BookingController extends Controller
 
     /**
      * Handle successful payment
+     *
+     * Xác nhận trạng thái thanh toán từ Stripe và cập nhật Booking/Payment tương ứng.
      */
     public function success(Request $request, Booking $booking)
     {
@@ -183,7 +189,7 @@ class BookingController extends Controller
                     // Update booking status
                     $booking->update(['status' => 'confirmed']);
 
-                    // Notify admin
+                    // Thông báo cho admin về thanh toán thành công (hiển thị khi vào màn payments)
                     $this->notifyAdmin($booking, $payment, 'success');
                 }
 
@@ -215,14 +221,17 @@ class BookingController extends Controller
     }
 
     /**
-     * Notify admin about payment status
+     * Thông báo cho admin về trạng thái thanh toán.
+     * Dùng session flash để hiển thị thông báo khi admin mở trang payments.
      */
-    protected function notifyAdmin($booking, $payment, $status)
+    protected function notifyAdmin(Booking $booking, Payment $payment, string $status): void
     {
-        // Store notification in session (will be shown when admin visits payments page)
+        // Đảm bảo đã load user để lấy tên khách
+        $booking->loadMissing('user');
+
         session()->flash('payment_notification', true);
-        session()->flash('payment_notification_message', 
-            $status === 'success' 
+        session()->flash('payment_notification_message',
+            $status === 'success'
                 ? __('common.payment_success_notification', [
                     'customer' => $booking->user->name,
                     'amount' => number_format($payment->amount, 0, ',', '.'),

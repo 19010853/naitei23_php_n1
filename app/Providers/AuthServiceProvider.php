@@ -7,7 +7,9 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 class AuthServiceProvider extends ServiceProvider
 {
     /**
-     * The policy mappings for the application.
+     * Mapping giữa model và policy tương ứng.
+     *
+     * - Ở đây đang map Payment -> PaymentPolicy để kiểm soát quyền xem/tải invoice.
      *
      * @var array<class-string, class-string>
      */
@@ -16,7 +18,9 @@ class AuthServiceProvider extends ServiceProvider
     ];
 
     /**
-     * Register any authentication / authorization services.
+     * Đăng ký các service liên quan đến authentication / authorization.
+     *
+     * - Gọi registerPolicies() để Laravel biết dùng policy nào cho model tương ứng.
      *
      * @return void
      */

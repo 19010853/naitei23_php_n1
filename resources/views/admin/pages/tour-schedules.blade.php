@@ -89,10 +89,6 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="pagination">
-            {{ $schedules->links() }}
-        </div>
     </div>
 
     @include('admin.components.tour-schedule-modals')

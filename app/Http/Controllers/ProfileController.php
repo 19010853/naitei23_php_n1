@@ -13,6 +13,8 @@ class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
+     *
+     * Hiển thị màn hình chỉnh sửa thông tin tài khoản hiện tại.
      */
     public function edit(Request $request): View
     {
@@ -23,6 +25,9 @@ class ProfileController extends Controller
 
     /**
      * Update the user's profile information.
+     *
+     * - Dùng ProfileUpdateRequest để validate và chỉ cập nhật field cho phép.
+     * - Nếu email thay đổi, reset lại trạng thái verify.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
@@ -39,6 +44,9 @@ class ProfileController extends Controller
 
     /**
      * Delete the user's account.
+     *
+     * - Yêu cầu xác nhận mật khẩu hiện tại.
+     * - Đăng xuất, xóa user và invalidate session.
      */
     public function destroy(Request $request): RedirectResponse
     {

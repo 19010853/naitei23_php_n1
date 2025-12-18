@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình filesystem (local, public, S3...) cho việc lưu trữ file/ảnh.
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Filesystem Disk
@@ -13,6 +13,7 @@ return [
     |
     */
 
+    // Mặc định ưu tiên lưu trên S3, fallback theo biến môi trường nếu thay đổi.
     'default' => env('FILESYSTEM_DRIVER', 's3'),
 
     /*

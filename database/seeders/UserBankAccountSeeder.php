@@ -9,7 +9,9 @@ use Illuminate\Database\Seeder;
 class UserBankAccountSeeder extends Seeder
 {
     /**
-     * Seed demo bank accounts for payout/payment UI.
+     * Seed một số tài khoản ngân hàng demo cho UI payout/payment.
+     *
+     * - Áp dụng cho các user key (admin/account & customer@example.com).
      *
      * @return void
      */

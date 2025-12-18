@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình thuật toán hash mật khẩu (bcrypt / argon...).
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Hash Driver

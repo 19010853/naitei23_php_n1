@@ -8,7 +8,9 @@ use Illuminate\Validation\Rule;
 class UpdateUserRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Xác định user có được phép cập nhật user khác hay không.
+     *
+     * Ở đây luôn cho phép, thực tế route thường đã được bảo vệ bởi middleware admin.
      */
     public function authorize(): bool
     {
@@ -16,7 +18,11 @@ class UpdateUserRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Các rules validate cho việc cập nhật user bên admin.
+     *
+     * - Email vẫn phải duy nhất, nhưng bỏ qua user hiện tại.
+     * - Mật khẩu có thể bỏ trống (nullable).
+     * - role_ids là mảng id role hợp lệ.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */

@@ -10,17 +10,15 @@ use Illuminate\Support\Facades\Auth;
 class CommentController extends Controller
 {
     /**
-     * Store a newly created comment on a review.
+     * Tạo comment mới cho một review.
+     *
+     * - Yêu cầu user đăng nhập.
      */
     public function store(Request $request, Review $review)
     {
-        $user = Auth::user();
-
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => __('common.please_login_to_comment')
-            ], 401);
+        $user = $this->requireAuthenticatedUserToComment();
+        if ($user instanceof \Illuminate\Http\JsonResponse) {
+            return $user;
         }
 
         $validated = $request->validate([
@@ -54,25 +52,19 @@ class CommentController extends Controller
     }
 
     /**
-     * Update the specified comment.
+     * Cập nhật nội dung comment.
+     *
+     * - Chỉ cho phép khi user đăng nhập và là chủ sở hữu comment.
      */
     public function update(Request $request, Comment $comment)
     {
-        $user = Auth::user();
-
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => __('common.please_login')
-            ], 401);
+        $user = $this->requireAuthenticatedUser();
+        if ($user instanceof \Illuminate\Http\JsonResponse) {
+            return $user;
         }
 
-        // Check if comment belongs to user
-        if ($comment->user_id !== $user->id) {
-            return response()->json([
-                'success' => false,
-                'message' => __('common.unauthorized')
-            ], 403);
+        if ($response = $this->forbidIfNotOwner($comment->user_id, $user->id)) {
+            return $response;
         }
 
         $validated = $request->validate([
@@ -99,25 +91,19 @@ class CommentController extends Controller
     }
 
     /**
-     * Remove the specified comment.
+     * Xóa một comment.
+     *
+     * - Require user đăng nhập và là chủ sở hữu.
      */
     public function destroy(Comment $comment)
     {
-        $user = Auth::user();
-
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => __('common.please_login')
-            ], 401);
+        $user = $this->requireAuthenticatedUser();
+        if ($user instanceof \Illuminate\Http\JsonResponse) {
+            return $user;
         }
 
-        // Check if comment belongs to user
-        if ($comment->user_id !== $user->id) {
-            return response()->json([
-                'success' => false,
-                'message' => __('common.unauthorized')
-            ], 403);
+        if ($response = $this->forbidIfNotOwner($comment->user_id, $user->id)) {
+            return $response;
         }
 
         $comment->delete();
@@ -126,5 +112,55 @@ class CommentController extends Controller
             'success' => true,
             'message' => __('common.comment_deleted_successfully')
         ]);
+    }
+
+    /**
+     * Bắt buộc user đăng nhập để comment.
+     * Dùng riêng message cho luồng comment.
+     */
+    protected function requireAuthenticatedUserToComment()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => __('common.please_login_to_comment'),
+            ], 401);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Bắt buộc user đăng nhập (dùng cho update/destroy).
+     */
+    protected function requireAuthenticatedUser()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => __('common.please_login'),
+            ], 401);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Trả về 403 nếu user hiện tại không phải chủ sở hữu comment.
+     */
+    protected function forbidIfNotOwner(int $ownerId, int $currentUserId): ?\Illuminate\Http\JsonResponse
+    {
+        if ($ownerId !== $currentUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => __('common.unauthorized'),
+            ], 403);
+        }
+
+        return null;
     }
 }

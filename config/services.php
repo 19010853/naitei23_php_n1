@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình credentials cho các dịch vụ bên thứ ba (Mailgun, SES, Google, Facebook, Stripe...).
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services

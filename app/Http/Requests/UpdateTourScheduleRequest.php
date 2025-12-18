@@ -7,7 +7,9 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateTourScheduleRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Xác định user có được phép cập nhật lịch tour hay không.
+     *
+     * Thường chỉ admin mới truy cập (đã check qua middleware).
      */
     public function authorize(): bool
     {
@@ -15,7 +17,9 @@ class UpdateTourScheduleRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Các rules validate cho việc cập nhật lịch tour.
+     *
+     * - Quy tắc ngày và giá, số lượng tương tự khi tạo mới.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */

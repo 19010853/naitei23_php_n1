@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình gửi mail cho ứng dụng (mailer mặc định, from address, markdown...).
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Mailer
@@ -13,6 +13,7 @@ return [
     |
     */
 
+    // Mặc định dùng AWS SES để gửi email, có thể đổi qua SMTP hoặc driver khác trong .env.
     'default' => env('MAIL_MAILER', 'ses'),
 
     /*

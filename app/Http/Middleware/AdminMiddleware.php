@@ -10,7 +10,10 @@ use Symfony\Component\HttpFoundation\Response;
 class AdminMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Middleware kiểm tra quyền truy cập admin cho các route quản trị.
+     *
+     * - Nếu chưa đăng nhập: chuyển hướng về trang đăng nhập admin.
+     * - Nếu đã đăng nhập nhưng không có role 'Admin': trả về lỗi 403.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */

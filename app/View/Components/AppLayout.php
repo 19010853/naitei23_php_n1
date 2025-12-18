@@ -7,7 +7,7 @@ use Illuminate\View\Component;
 class AppLayout extends Component
 {
     /**
-     * Get the view / contents that represents the component.
+     * Trả về view layout chính cho các trang đã đăng nhập (app layout).
      *
      * @return \Illuminate\View\View
      */

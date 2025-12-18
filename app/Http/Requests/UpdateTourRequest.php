@@ -9,7 +9,9 @@ use Illuminate\Support\Str;
 class UpdateTourRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Xác định user có được phép cập nhật tour hay không.
+     *
+     * Ở đây luôn cho phép, logic phân quyền nằm ở layer khác (middleware/policy).
      */
     public function authorize(): bool
     {
@@ -17,7 +19,9 @@ class UpdateTourRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Các rules validate cho việc cập nhật tour.
+     *
+     * - Tên và slug vẫn phải duy nhất, nhưng ignore tour hiện tại.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -49,7 +53,9 @@ class UpdateTourRequest extends FormRequest
     }
 
     /**
-     * Prepare the data for validation.
+     * Chuẩn bị dữ liệu trước khi validate.
+     *
+     * - Nếu không có slug sẽ tự tạo slug từ name + timestamp.
      */
     protected function prepareForValidation(): void
     {

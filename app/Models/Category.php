@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Model Category.
+ *
+ * Nhóm các tour theo loại (ví dụ: biển, núi, tham quan...), có thể gắn ảnh đại diện.
+ */
 class Category extends Model
 {
     use HasFactory;
@@ -19,7 +24,7 @@ class Category extends Model
     ];
 
     /**
-     * Category owns many tours.
+     * Một category sở hữu nhiều tour.
      */
     public function tours(): HasMany
     {
@@ -27,8 +32,10 @@ class Category extends Model
     }
 
     /**
-     * Get the full URL for the category image.
-     * Automatically handles both S3 and local storage.
+     * Lấy URL đầy đủ cho ảnh category.
+     *
+     * - Hỗ trợ cả ảnh lưu trên S3 và local.
+     * - Nếu giá trị đã là URL tuyệt đối (http/https) thì trả nguyên.
      */
     public function getImageUrlAttribute($value): ?string
     {

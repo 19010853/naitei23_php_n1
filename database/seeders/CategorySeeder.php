@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class CategorySeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed các category mặc định cho hệ thống (trong nước, nước ngoài, biển đảo,...).
      *
      * @return void
      */

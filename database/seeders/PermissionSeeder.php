@@ -8,7 +8,9 @@ use Illuminate\Database\Seeder;
 class PermissionSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed danh sách quyền (permissions) cơ bản cho hệ thống.
+     *
+     * - Các quyền sẽ được gắn cho role ở RolePermissionSeeder.
      *
      * @return void
      */

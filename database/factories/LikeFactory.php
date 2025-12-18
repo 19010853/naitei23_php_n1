@@ -8,11 +8,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Like>
+ *
+ * Factory sinh dữ liệu giả cho Like (lượt thích cho tour).
  */
 class LikeFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * Định nghĩa trạng thái mặc định của Like.
+     *
+     * - Gán likeable là một Tour bất kỳ.
      *
      * @return array<string, mixed>
      */

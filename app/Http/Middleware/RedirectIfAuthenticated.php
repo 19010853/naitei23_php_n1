@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Auth;
 class RedirectIfAuthenticated
 {
     /**
-     * Handle an incoming request.
+     * Xử lý khi user đã đăng nhập mà vẫn truy cập route dành cho guest (login/register).
+     *
+     * - Nếu user có role 'Admin' thì chuyển về dashboard admin.
+     * - Ngược lại chuyển về RouteServiceProvider::HOME (dashboard khách).
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next

@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình hệ thống queue (hàng đợi) cho ứng dụng: driver, kết nối, failed jobs.
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Queue Connection Name

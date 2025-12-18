@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Model TourSchedule.
+ *
+ * Thể hiện một lịch khởi hành cụ thể của tour (ngày bắt đầu/kết thúc, giá, sức chứa).
+ */
 class TourSchedule extends Model
 {
     use HasFactory;
@@ -27,7 +32,7 @@ class TourSchedule extends Model
     ];
 
     /**
-     * TourSchedule belongs to Tour
+     * Lịch tour thuộc về một tour.
      */
     public function tour(): BelongsTo
     {
@@ -35,7 +40,7 @@ class TourSchedule extends Model
     }
 
     /**
-     * TourSchedule has many bookings
+     * Lịch tour có nhiều booking.
      */
     public function bookings(): HasMany
     {
@@ -43,9 +48,10 @@ class TourSchedule extends Model
     }
 
     /**
-     * Get the total number of booked participants for this schedule
-     * Only count confirmed bookings (status = 'confirmed' or 'pending')
-     * Uses withSum result if available, otherwise queries the database
+     * Tổng số người đã được đặt cho lịch này.
+     *
+     * - Chỉ tính booking có status 'pending' hoặc 'confirmed'.
+     * - Ưu tiên dùng kết quả withSum nếu đã eager load, tránh N+1.
      */
     public function getBookedParticipantsAttribute(): int
     {
@@ -61,7 +67,7 @@ class TourSchedule extends Model
     }
 
     /**
-     * Get the number of available slots
+     * Số chỗ còn trống cho lịch này (thuộc tính ảo available_slots).
      */
     public function getAvailableSlotsAttribute(): int
     {
@@ -71,7 +77,7 @@ class TourSchedule extends Model
     }
 
     /**
-     * Check if the schedule is fully booked
+     * Kiểm tra lịch đã full chỗ hay chưa.
      */
     public function isFullyBooked(): bool
     {

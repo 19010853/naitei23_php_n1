@@ -40,10 +40,6 @@
                 @endforelse
             </tbody>
         </table>
-
-        <div class="pagination">
-            {{ $comments->links() }}
-        </div>
     </div>
 @endsection
 

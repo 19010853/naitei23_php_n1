@@ -19,6 +19,8 @@ class StripeWebhookController extends Controller
 
     /**
      * Handle Stripe webhook events
+     *
+     * Tiếp nhận sự kiện từ Stripe và ủy quyền xử lý cho từng handler riêng.
      */
     public function handleWebhook(Request $request)
     {
@@ -59,6 +61,8 @@ class StripeWebhookController extends Controller
 
     /**
      * Handle successful checkout session
+     *
+     * Khi checkout.session.completed, xác nhận và cập nhật Booking/Payment.
      */
     protected function handleCheckoutSessionCompleted($session)
     {
@@ -95,7 +99,7 @@ class StripeWebhookController extends Controller
             'status' => 'confirmed',
         ]);
 
-        // Notify admin
+        // Thông báo cho admin về thanh toán thành công
         $this->notifyAdmin($booking, $payment, 'success');
 
         Log::info('Stripe webhook: Payment successful', [
@@ -106,6 +110,8 @@ class StripeWebhookController extends Controller
 
     /**
      * Handle successful payment intent
+     *
+     * Dự phòng trường hợp Stripe gửi sự kiện payment_intent.succeeded riêng.
      */
     protected function handlePaymentIntentSucceeded($paymentIntent)
     {
@@ -130,13 +136,15 @@ class StripeWebhookController extends Controller
             $booking = $payment->booking;
             $booking->update(['status' => 'confirmed']);
 
-            // Notify admin
+            // Thông báo cho admin về thanh toán thành công
             $this->notifyAdmin($booking, $payment, 'success');
         }
     }
 
     /**
      * Handle failed payment intent
+     *
+     * Xử lý khi thanh toán thất bại, cập nhật trạng thái và thông báo admin.
      */
     protected function handlePaymentIntentFailed($paymentIntent)
     {
@@ -159,7 +167,7 @@ class StripeWebhookController extends Controller
         $booking = $payment->booking;
         $booking->update(['status' => 'cancelled']);
 
-        // Notify admin
+        // Thông báo cho admin về thanh toán thất bại
         $this->notifyAdmin($booking, $payment, 'failed');
 
         Log::info('Stripe webhook: Payment failed', [
@@ -169,11 +177,13 @@ class StripeWebhookController extends Controller
     }
 
     /**
-     * Notify admin about payment status
+     * Thông báo cho admin về trạng thái thanh toán (webhook side).
+     * Sử dụng session flash tương tự phía BookingController để đồng nhất trải nghiệm.
      */
-    protected function notifyAdmin($booking, $payment, $status)
+    protected function notifyAdmin(Booking $booking, Payment $payment, string $status): void
     {
-        // Store notification in session (will be shown when admin visits payments page)
+        $booking->loadMissing('user');
+
         session()->flash('payment_notification', true);
         session()->flash('payment_notification_message', 
             $status === 'success' 
@@ -187,4 +197,5 @@ class StripeWebhookController extends Controller
                 ])
         );
     }
+
 }

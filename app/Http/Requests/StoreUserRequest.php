@@ -8,7 +8,9 @@ use Illuminate\Validation\Rule;
 class StoreUserRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Xác định user có được phép tạo mới user khác hay không.
+     *
+     * Ở đây trả về true, thường đã được bảo vệ bởi middleware admin.
      */
     public function authorize(): bool
     {
@@ -16,7 +18,11 @@ class StoreUserRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Các rules validate cho việc tạo mới user bên admin.
+     *
+     * - Bắt buộc name/email/password.
+     * - Email phải là duy nhất.
+     * - role_ids là mảng id role hợp lệ.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */

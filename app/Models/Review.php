@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+/**
+ * Model Review.
+ *
+ * Đánh giá (rating + nội dung) của user cho một tour, có thể có admin_reply, comment và like.
+ */
 class Review extends Model
 {
     use HasFactory;
@@ -25,18 +30,24 @@ class Review extends Model
         'admin_replied_at' => 'datetime',
     ];
 
+    /**
+     * Review thuộc về một user (người viết review).
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Review thuộc về một tour.
+     */
     public function tour(): BelongsTo
     {
         return $this->belongsTo(Tour::class, 'tour_id');
     }
 
     /**
-     * Review has many comments (polymorphic)
+     * Review có nhiều comment (quan hệ polymorphic).
      */
     public function comments(): MorphMany
     {
@@ -44,7 +55,7 @@ class Review extends Model
     }
 
     /**
-     * Review has many likes (polymorphic)
+     * Review có nhiều like (quan hệ polymorphic).
      */
     public function likes(): MorphMany
     {
@@ -52,7 +63,7 @@ class Review extends Model
     }
 
     /**
-     * Check if a user has liked this review
+     * Kiểm tra 1 user cụ thể đã like review này hay chưa.
      */
     public function isLikedBy(?User $user): bool
     {
@@ -64,7 +75,7 @@ class Review extends Model
     }
 
     /**
-     * Get the like count for this review
+     * Lấy tổng số like của review (thuộc tính ảo likes_count).
      */
     public function getLikesCountAttribute(): int
     {
@@ -72,7 +83,7 @@ class Review extends Model
     }
 
     /**
-     * Check if review belongs to user
+     * Kiểm tra review này có thuộc về user cho trước hay không.
      */
     public function belongsToUser(?User $user): bool
     {
@@ -84,7 +95,7 @@ class Review extends Model
     }
 
     /**
-     * Check if review has admin reply
+     * Kiểm tra review đã có phản hồi từ admin hay chưa.
      */
     public function hasAdminReply(): bool
     {

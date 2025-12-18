@@ -7,7 +7,9 @@ use Illuminate\Http\Middleware\TrustHosts as Middleware;
 class TrustHosts extends Middleware
 {
     /**
-     * Get the host patterns that should be trusted.
+     * Lấy danh sách pattern host được tin cậy.
+     *
+     * Mặc định trust toàn bộ subdomain của APP_URL (giúp xử lý proxy/nginx đúng header).
      *
      * @return array<int, string|null>
      */

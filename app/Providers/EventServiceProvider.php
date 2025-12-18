@@ -9,7 +9,9 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 class EventServiceProvider extends ServiceProvider
 {
     /**
-     * The event listener mappings for the application.
+     * Mapping giữa event và listener tương ứng.
+     *
+     * Ví dụ: khi Registered fired, sẽ gửi email verify thông qua SendEmailVerificationNotification.
      *
      * @var array<class-string, array<int, class-string>>
      */
@@ -20,7 +22,9 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     /**
-     * Register any events for your application.
+     * Đăng ký các event cho ứng dụng.
+     *
+     * Có thể dùng để thêm event/listener động hoặc ghi log khi boot.
      *
      * @return void
      */

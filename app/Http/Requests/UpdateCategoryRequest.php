@@ -8,11 +8,21 @@ use Illuminate\Validation\Rule;
 
 class UpdateCategoryRequest extends FormRequest
 {
+    /**
+     * Xác định user có được phép cập nhật category hay không.
+     *
+     * Mặc định cho phép (đã được middleware kiểm soát).
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Các rules validate cho việc cập nhật category.
+     *
+     * - Tên và slug vẫn phải duy nhất, nhưng bỏ qua category hiện tại.
+     */
     public function rules(): array
     {
         $categoryId = $this->route('category');
@@ -38,6 +48,11 @@ class UpdateCategoryRequest extends FormRequest
         ];
     }
 
+    /**
+     * Chuẩn bị dữ liệu trước khi validate.
+     *
+     * - Nếu chưa có slug thì tự sinh từ name + timestamp (tương tự create).
+     */
     protected function prepareForValidation(): void
     {
         if ($this->has('name') && !$this->filled('slug')) {

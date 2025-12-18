@@ -12,7 +12,9 @@ use Illuminate\Validation\ValidationException;
 class LoginRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Xác định user có được phép gửi request login này hay không.
+     *
+     * Ở đây luôn trả về true vì check quyền đã được xử lý ở nơi khác (middleware, guard).
      *
      * @return bool
      */
@@ -22,7 +24,9 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Các rules validate áp dụng cho form đăng nhập.
+     *
+     * - Bắt buộc email/password, định dạng email hợp lệ.
      *
      * @return array
      */
@@ -35,7 +39,10 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Attempt to authenticate the request's credentials.
+     * Thực hiện đăng nhập với credentials từ request.
+     *
+     * - Có tích hợp rate limiter để hạn chế brute-force (tối đa 5 lần thử).
+     * - Nếu login thất bại: tăng counter và ném ValidationException với message auth.failed.
      *
      * @return void
      *
@@ -57,7 +64,9 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Ensure the login request is not rate limited.
+     * Đảm bảo request đăng nhập chưa bị giới hạn tần suất.
+     *
+     * - Nếu quá số lần cho phép: phát sự kiện Lockout và ném lỗi throttle.
      *
      * @return void
      *
@@ -82,7 +91,9 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the rate limiting throttle key for the request.
+     * Tạo key cho rate limiter dựa trên email + IP.
+     *
+     * Ví dụ: user@example.com|127.0.0.1
      *
      * @return string
      */

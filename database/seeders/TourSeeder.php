@@ -12,7 +12,9 @@ use Illuminate\Support\Str;
 class TourSeeder extends Seeder
 {
     /**
-     * Seed demo tours and schedules for admin UI.
+     * Seed một số tour và lịch khởi hành demo cho giao diện quản trị.
+     *
+     * - Yêu cầu đã có Category trước (CategorySeeder).
      *
      * @return void
      */

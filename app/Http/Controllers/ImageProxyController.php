@@ -10,6 +10,10 @@ class ImageProxyController extends Controller
 {
     /**
      * Proxy image from S3 or local storage
+     *
+     * - Nhận path đã được base64 encode, decode và validate cẩn thận.
+     * - Ưu tiên lấy ảnh từ local 'public', sau đó mới tới S3.
+     * - Trả về 404 nếu path không hợp lệ hoặc file không tồn tại.
      */
     public function proxy(Request $request, string $path)
     {

@@ -8,11 +8,15 @@ use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tour>
+ *
+ * Factory sinh dữ liệu giả cho Tour (tên tour, slug, mô tả, địa điểm, ảnh).
  */
 class TourFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * Định nghĩa trạng thái mặc định của Tour.
+     *
+     * - Sử dụng danh sách tên tour cố định để dữ liệu seed dễ hiểu trên UI.
      *
      * @return array<string, mixed>
      */

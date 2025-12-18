@@ -63,11 +63,11 @@
                     <th style="width: 160px; text-align: center;">{{ __('common.actions') }}</th>
                 </tr>
             </thead>
-            @include('admin.pages.users-table')
+            @include('admin.pages.users-table', ['users' => $users])
         </table>
 
         <div class="pagination" id="paginationContainer">
-            {{ $users->links() }}
+            @include('admin.pages.users-pagination', ['users' => $users])
         </div>
     </div>
 

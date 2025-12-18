@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình CORS (Cross-Origin Resource Sharing) cho API / frontend.
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Cross-Origin Resource Sharing (CORS) Configuration

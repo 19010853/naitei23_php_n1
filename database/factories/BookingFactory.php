@@ -8,11 +8,16 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Booking>
+ *
+ * Factory sinh dữ liệu giả cho Booking (dùng trong test/seed demo).
  */
 class BookingFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * Định nghĩa trạng thái mặc định của model Booking.
+     *
+     * - Random trạng thái booking (pending/confirmed/cancelled/completed).
+     * - user_id và tour_schedule_id được tạo thông qua các factory liên quan.
      *
      * @return array<string, mixed>
      */

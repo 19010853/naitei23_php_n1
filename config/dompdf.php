@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình thư viện DomPDF (dùng cho xuất PDF hoá đơn, báo cáo...).
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Settings

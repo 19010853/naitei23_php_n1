@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Model Tour.
+ *
+ * Thông tin tour du lịch (tên, mô tả, địa điểm, ảnh, rating trung bình...),
+ * liên kết với Category, TourSchedule, Review, Comment và Like.
+ */
 class Tour extends Model
 {
     use HasFactory;
@@ -27,18 +33,24 @@ class Tour extends Model
         'average_rating' => 'decimal:1',
     ];
 
+    /**
+     * Tour thuộc về một category.
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    /**
+     * Tour có nhiều lịch (TourSchedule).
+     */
     public function schedules(): HasMany
     {
         return $this->hasMany(TourSchedule::class, 'tour_id');
     }
 
     /**
-     * Tour has many reviews
+     * Tour có nhiều review.
      */
     public function reviews(): HasMany
     {
@@ -46,7 +58,7 @@ class Tour extends Model
     }
 
     /**
-     * Tour has many comments (polymorphic)
+     * Tour có nhiều comment (polymorphic).
      */
     public function comments(): MorphMany
     {
@@ -54,7 +66,7 @@ class Tour extends Model
     }
 
     /**
-     * Tour has many likes (polymorphic)
+     * Tour có nhiều like (polymorphic).
      */
     public function likes(): MorphMany
     {
@@ -62,7 +74,7 @@ class Tour extends Model
     }
 
     /**
-     * Update average rating based on all reviews
+     * Cập nhật lại điểm trung bình (average_rating) dựa trên tất cả review.
      */
     public function updateAverageRating(): void
     {
@@ -79,10 +91,11 @@ class Tour extends Model
     }
 
     /**
-     * Get stars display value based on average_rating
-     * Rules:
-     * .0 - .4 → round down
-     * .5 - .9 → round up
+     * Lấy số sao hiển thị dựa trên average_rating.
+     *
+     * Quy tắc:
+     * - .0 - .4 → làm tròn xuống
+     * - .5 - .9 → làm tròn lên
      */
     public function getStarsDisplayAttribute(): int
     {
@@ -109,8 +122,10 @@ class Tour extends Model
     }
 
     /**
-     * Get the full URL for the tour image.
-     * Automatically handles both S3 and local storage.
+     * Lấy URL đầy đủ cho ảnh tour.
+     *
+     * - Hỗ trợ cả S3 và local storage.
+     * - Nếu đã là URL tuyệt đối (http/https) thì trả nguyên.
      */
     public function getImageUrlAttribute($value): ?string
     {

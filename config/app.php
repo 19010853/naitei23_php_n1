@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình chung cho ứng dụng Laravel (tên app, môi trường, provider, alias, đa ngôn ngữ...).
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -54,13 +54,15 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-'asset_url' => env('ASSET_URL', null),
+    // URL dùng cho asset (nếu host tĩnh khác với APP_URL)
+    'asset_url' => env('ASSET_URL', null),
 
-'locale_flags' => [
-    'en' => 'https://flagcdn.com/w20/us.png',
-    'vi' => 'https://flagcdn.com/w20/vn.png',
-    'ja' => 'https://flagcdn.com/w20/jp.png',
-],
+    // Cấu hình icon cờ cho từng locale (dùng ở UI để hiển thị chọn ngôn ngữ).
+    'locale_flags' => [
+        'en' => 'https://flagcdn.com/w20/us.png',
+        'vi' => 'https://flagcdn.com/w20/vn.png',
+        'ja' => 'https://flagcdn.com/w20/jp.png',
+    ],
 
     /*
     |--------------------------------------------------------------------------

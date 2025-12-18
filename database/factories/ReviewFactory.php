@@ -8,11 +8,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Review>
+ *
+ * Factory sinh dữ liệu giả cho Review (đánh giá tour).
  */
 class ReviewFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * Định nghĩa trạng thái mặc định của Review.
+     *
+     * - rating từ 3 đến 5 để ưu tiên đánh giá tích cực trong demo.
      *
      * @return array<string, mixed>
      */

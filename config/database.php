@@ -1,9 +1,9 @@
 <?php
 
+// Cấu hình kết nối cơ sở dữ liệu (MySQL, SQLite, Redis, ...).
 use Illuminate\Support\Str;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Database Connection Name

@@ -11,6 +11,9 @@ class LanguageController extends Controller
 {
     /**
      * Persist the user preferred language in the session.
+     *
+     * - Chỉ cho phép các locale trong danh sách hỗ trợ.
+     * - Lưu vào session để áp dụng cho các request tiếp theo.
      */
     public function changeLanguage(Request $request, string $locale): RedirectResponse
     {

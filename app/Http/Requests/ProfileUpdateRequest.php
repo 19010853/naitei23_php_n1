@@ -8,7 +8,9 @@ use Illuminate\Validation\Rule;
 class ProfileUpdateRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Xác định user có quyền gửi request cập nhật profile hay không.
+     *
+     * Ở đây cho phép mọi user đã đăng nhập sử dụng form này (check auth ở middleware).
      */
     public function authorize(): bool
     {
@@ -16,7 +18,10 @@ class ProfileUpdateRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Các rules validate áp dụng cho form cập nhật profile.
+     *
+     * - Bắt buộc name.
+     * - Email phải là duy nhất trừ chính user hiện tại.
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
      */

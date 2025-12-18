@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình xác thực (auth) cho ứng dụng: guards, providers, reset mật khẩu...
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults

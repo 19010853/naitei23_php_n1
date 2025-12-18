@@ -11,25 +11,25 @@ use Illuminate\Support\Facades\Route;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * The path to the "home" route for your application.
+     * Đường dẫn tới route "home" của ứng dụng.
      *
-     * This is used by Laravel authentication to redirect users after login.
+     * Được dùng bởi Laravel để redirect user sau khi đăng nhập thành công (HOME).
      *
      * @var string
      */
     public const HOME = '/';
 
     /**
-     * The controller namespace for the application.
+     * Namespace mặc định cho controller (tuỳ chọn).
      *
-     * When present, controller route declarations will automatically be prefixed with this namespace.
+     * Nếu bật, các route controller sẽ tự prefix với namespace này.
      *
      * @var string|null
      */
     // protected $namespace = 'App\\Http\\Controllers';
 
     /**
-     * Define your route model bindings, pattern filters, etc.
+     * Định nghĩa route model binding, pattern filter, rate limiting và group route.
      *
      * @return void
      */
@@ -50,7 +50,9 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the rate limiters for the application.
+     * Cấu hình rate limiting cho ứng dụng.
+     *
+     * - Ở đây đang giới hạn API 60 request/phút dựa trên user id hoặc IP.
      *
      * @return void
      */

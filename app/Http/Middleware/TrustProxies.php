@@ -8,14 +8,16 @@ use Illuminate\Http\Request;
 class TrustProxies extends Middleware
 {
     /**
-     * The trusted proxies for this application.
+     * Danh sách các proxy được tin cậy cho ứng dụng.
+     *
+     * Có thể cấu hình IP/ CIDR nếu deploy sau reverse proxy (Nginx, Load Balancer...).
      *
      * @var array<int, string>|string|null
      */
     protected $proxies;
 
     /**
-     * The headers that should be used to detect proxies.
+     * Các header được dùng để phát hiện thông tin proxy (IP thật của client).
      *
      * @var int
      */

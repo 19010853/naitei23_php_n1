@@ -11,7 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 class Localization
 {
     /**
-     * Handle an incoming request.
+     * Middleware thiết lập ngôn ngữ (locale) cho mỗi request.
+     *
+     * - Lấy locale từ session ('locale' hoặc 'lang'), fallback về config('app.locale').
+     * - Gọi App::setLocale() để áp dụng cho toàn bộ request hiện tại.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */

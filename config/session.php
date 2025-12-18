@@ -1,9 +1,9 @@
 <?php
 
+// Cấu hình session (driver, lifetime, cookie, same-site, bảo mật...) cho ứng dụng.
 use Illuminate\Support\Str;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Session Driver

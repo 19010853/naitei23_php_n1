@@ -41,10 +41,6 @@
                 @endforelse
             </tbody>
         </table>
-
-        <div class="pagination">
-            {{ $bookings->links() }}
-        </div>
     </div>
 @endsection
 

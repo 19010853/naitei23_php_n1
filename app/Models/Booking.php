@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Model Booking.
+ *
+ * Đại diện cho một lần đặt tour của khách hàng, liên kết với User, TourSchedule và các Payment.
+ */
 class Booking extends Model
 {
     use HasFactory;
@@ -26,16 +31,25 @@ class Booking extends Model
         'num_participants' => 'integer',
     ];
 
+    /**
+     * Booking thuộc về một user (khách hàng tạo booking).
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Booking thuộc về một lịch tour cụ thể.
+     */
     public function tourSchedule(): BelongsTo
     {
         return $this->belongsTo(TourSchedule::class, 'tour_schedule_id');
     }
 
+    /**
+     * Booking có thể có nhiều lần thanh toán (Payment).
+     */
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class, 'booking_id');

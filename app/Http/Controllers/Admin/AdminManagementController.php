@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\StoreTourScheduleRequest;
 use App\Http\Requests\StoreTourRequest;
+use App\Http\Requests\StoreTourScheduleRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateCategoryRequest;
-use App\Http\Requests\UpdateTourScheduleRequest;
 use App\Http\Requests\UpdateTourRequest;
+use App\Http\Requests\UpdateTourScheduleRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Booking;
 use App\Models\Category;
@@ -22,49 +22,28 @@ use App\Models\TourSchedule;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminManagementController extends Controller
 {
+    /**
+     * Hằng số định nghĩa thư mục lưu ảnh tour và category trên S3/local.
+     * Đặt ở controller để dễ tìm kiếm cấu hình liên quan tới quản trị.
+     */
     private const TOUR_IMAGE_DIR = 'images/tours';
     private const CATEGORY_IMAGE_DIR = 'images/categories';
 
     /**
      * Display a listing of users with search and filter
+     *
+     * Danh sách user kèm search + filter role.
+     * Logic query được tách xuống hàm riêng để controller dễ đọc hơn.
      */
     public function users(Request $request)
     {
-        $query = $request->input('query');
-        $roleId = $request->input('role_id');
-
-        $usersQuery = User::with('roles');
-
-        // Search filter (name or email)
-        if (!empty($query)) {
-            // Escape LIKE wildcards to prevent LIKE injection
-            $escapeLike = function ($value) {
-                return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $value);
-            };
-            $escapedQuery = $escapeLike($query);
-            
-            $usersQuery->where(function($q) use ($escapedQuery) {
-                $q->whereRaw("name LIKE ? ESCAPE '\\'", ["%{$escapedQuery}%"])
-                  ->orWhereRaw("email LIKE ? ESCAPE '\\'", ["%{$escapedQuery}%"]);
-            });
-        }
-
-        // Role filter
-        if (!empty($roleId) && $roleId !== 'all') {
-            $usersQuery->whereHas('roles', function($q) use ($roleId) {
-                $q->where('roles.id', $roleId);
-            });
-        }
-
-        $users = $usersQuery->latest()->paginate(12);
+        $users = $this->buildUsersQuery($request)->latest()->paginate(12);
         $roles = Role::all();
 
         // Keep search parameters in pagination links
@@ -83,6 +62,8 @@ class AdminManagementController extends Controller
 
     /**
      * Store a newly created user
+     *
+     * Tạo mới user: validate qua FormRequest, hash mật khẩu, gán roles.
      */
     public function storeUser(StoreUserRequest $request)
     {
@@ -90,7 +71,7 @@ class AdminManagementController extends Controller
         $roleIds = $validated['role_ids'];
         unset($validated['role_ids']);
 
-        // Hash password
+        // Hash password trước khi lưu
         $validated['password'] = Hash::make($validated['password']);
 
         $user = User::create($validated);
@@ -101,6 +82,8 @@ class AdminManagementController extends Controller
 
     /**
      * Update the specified user
+     *
+     * Cập nhật thông tin user + roles, chỉ đổi mật khẩu nếu có nhập mới.
      */
     public function updateUser(UpdateUserRequest $request, User $user)
     {
@@ -108,7 +91,7 @@ class AdminManagementController extends Controller
         $roleIds = $validated['role_ids'];
         unset($validated['role_ids']);
 
-        // Only update password if provided
+        // Chỉ cập nhật password nếu người dùng nhập
         if ($request->filled('password')) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
@@ -123,6 +106,8 @@ class AdminManagementController extends Controller
 
     /**
      * Remove the specified user
+     *
+     * Không cho phép user tự xóa chính mình, còn lại xóa bình thường.
      */
     public function deleteUser(Request $request, User $user)
     {
@@ -148,16 +133,21 @@ class AdminManagementController extends Controller
 
     /**
      * Manage Tour Categories
+     *
+     * Lấy danh sách category (kèm số tour) cho trang quản trị.
      */
     public function categories()
     {
         $categories = Category::withCount('tours')
             ->orderBy('name')
-            ->paginate(12);
+            ->get();
 
         return view('admin.pages.categories', compact('categories'));
     }
 
+    /**
+     * Lưu category mới, có hỗ trợ upload ảnh.
+     */
     public function storeCategory(StoreCategoryRequest $request)
     {
         $validated = $request->validated();
@@ -171,6 +161,9 @@ class AdminManagementController extends Controller
         return redirect()->route('admin.categories')->with('success', __('common.category_saved_successfully'));
     }
 
+    /**
+     * Cập nhật category (bao gồm xử lý ảnh nếu có).
+     */
     public function updateCategory(UpdateCategoryRequest $request, Category $category)
     {
         $validated = $request->validated();
@@ -193,6 +186,7 @@ class AdminManagementController extends Controller
             ], 400);
         }
 
+        // Xóa file ảnh (nếu có) và record category
         $this->deleteImage($category->image_url);
         $category->delete();
 
@@ -208,6 +202,8 @@ class AdminManagementController extends Controller
 
     /**
      * Manage Tours (general information)
+     *
+     * Danh sách tour, kèm category, số schedule và rating trung bình.
      */
     public function tours()
     {
@@ -216,12 +212,14 @@ class AdminManagementController extends Controller
             ->withAvg('reviews', 'rating')
             ->orderBy('name')
             ->paginate(12);
-
         $categories = Category::orderBy('name')->get();
 
         return view('admin.pages.tours', compact('tours', 'categories'));
     }
 
+    /**
+     * Lưu tour mới, có hỗ trợ upload ảnh.
+     */
     public function storeTour(StoreTourRequest $request)
     {
         $validated = $request->validated();
@@ -235,6 +233,9 @@ class AdminManagementController extends Controller
         return redirect()->route('admin.tours')->with('success', __('common.tour_saved_successfully'));
     }
 
+    /**
+     * Cập nhật tour hiện tại.
+     */
     public function updateTour(UpdateTourRequest $request, Tour $tour)
     {
         $validated = $request->validated();
@@ -250,14 +251,15 @@ class AdminManagementController extends Controller
 
     public function deleteTour(Request $request, Tour $tour)
     {
-        // Prevent deletion if tour has associated schedules
-            if ($tour->schedules()->count() > 0) {
-                return response()->json([
-                    'success' => false,
-                    'message' => __('common.cannot_delete_tour_with_schedules')
-                ], 400);
-            }
+        // Prevent deletion if tour has associated schedules (rule nghiệp vụ nằm ở controller)
+        if ($tour->schedules()->count() > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => __('common.cannot_delete_tour_with_schedules'),
+            ], 400);
+        }
 
+        // Xóa ảnh + bản ghi tour
         $this->deleteImage($tour->image_url);
         $tour->delete();
 
@@ -265,11 +267,13 @@ class AdminManagementController extends Controller
             session()->flash('success', __('common.tour_deleted_successfully'));
         }
 
-            return response()->json(['success' => true, 'message' => __('common.tour_deleted_successfully')]);
+        return response()->json(['success' => true, 'message' => __('common.tour_deleted_successfully')]);
     }
 
     /**
      * Manage Tour Schedules (specific schedules)
+     *
+     * Danh sách lịch tour, kèm số booking cho quản trị.
      */
     public function tourSchedules()
     {
@@ -277,7 +281,7 @@ class AdminManagementController extends Controller
         $schedules = TourSchedule::with('tour')
             ->withCount('bookings')
             ->latest('start_date')
-            ->paginate(12);
+            ->get();
 
         return view('admin.pages.tour-schedules', compact('schedules', 'tours'));
     }
@@ -285,28 +289,28 @@ class AdminManagementController extends Controller
     public function storeTourSchedule(StoreTourScheduleRequest $request)
     {
         $validated = $request->validated();
-            TourSchedule::create($validated);
+        TourSchedule::create($validated);
 
-            return redirect()->route('admin.tour-schedules')->with('success', __('common.schedule_saved_successfully'));
+        return redirect()->route('admin.tour-schedules')->with('success', __('common.schedule_saved_successfully'));
     }
 
     public function updateTourSchedule(UpdateTourScheduleRequest $request, TourSchedule $tourSchedule)
     {
         $validated = $request->validated();
-            $tourSchedule->update($validated);
+        $tourSchedule->update($validated);
 
-            return redirect()->route('admin.tour-schedules')->with('success', __('common.schedule_saved_successfully'));
+        return redirect()->route('admin.tour-schedules')->with('success', __('common.schedule_saved_successfully'));
     }
 
     public function deleteTourSchedule(Request $request, TourSchedule $tourSchedule)
     {
         // Prevent deletion if schedule has associated bookings
-            if ($tourSchedule->bookings()->count() > 0) {
-                return response()->json([
-                    'success' => false,
-                    'message' => __('common.cannot_delete_schedule_with_bookings')
-                ], 400);
-            }
+        if ($tourSchedule->bookings()->count() > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => __('common.cannot_delete_schedule_with_bookings'),
+            ], 400);
+        }
 
         $tourSchedule->delete();
 
@@ -314,14 +318,15 @@ class AdminManagementController extends Controller
             session()->flash('success', __('common.schedule_deleted_successfully'));
         }
 
-            return response()->json(['success' => true, 'message' => __('common.schedule_deleted_successfully')]);
+        return response()->json(['success' => true, 'message' => __('common.schedule_deleted_successfully')]);
     }
 
     public function bookings()
     {
+        // Danh sách booking kèm user & tour schedule để tránh N+1 trên view
         $bookings = Booking::with(['user', 'tourSchedule.tour'])
             ->latest()
-            ->paginate(12);
+            ->get();
 
         return view('admin.pages.bookings', compact('bookings'));
     }
@@ -331,11 +336,13 @@ class AdminManagementController extends Controller
      */
     public function exportBookingsPdf()
     {
+        // Lấy toàn bộ booking kèm quan hệ cần thiết
         $bookings = Booking::with(['user', 'tourSchedule.tour'])
             ->orderByDesc('created_at')
             ->get();
 
-        $pdf = Pdf::loadView('admin.pdf.bookings', [
+        // Sinh PDF với DomPDF (giữ nguyên nội dung view)
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.bookings', [
             'bookings' => $bookings,
             'generatedAt' => now(),
         ])->setPaper('a4', 'landscape');
@@ -345,9 +352,10 @@ class AdminManagementController extends Controller
 
     public function payments()
     {
+        // Danh sách payment kèm booking, user, tour để tránh N+1
         $payments = Payment::with(['booking.user', 'booking.tourSchedule.tour'])
             ->latest('payment_date')
-            ->paginate(12);
+            ->get();
 
         // Check if there's a payment notification from webhook
         if (session('payment_notification')) {
@@ -405,9 +413,10 @@ class AdminManagementController extends Controller
 
     public function reviews()
     {
+        // Review kèm user & tour để hiển thị ở trang admin
         $reviews = Review::with(['user', 'tour'])
             ->latest()
-            ->paginate(12);
+            ->get();
 
         // Check if there's a new review notification from session
         if (session('new_review_notification')) {
@@ -421,9 +430,10 @@ class AdminManagementController extends Controller
 
     public function comments()
     {
+        // Comment kèm user & commentable (review) cho admin
         $comments = Comment::with(['user', 'commentable'])
             ->latest()
-            ->paginate(12);
+            ->get();
 
         // Check if there's a new comment notification from session
         if (session('new_comment_notification')) {
@@ -494,13 +504,46 @@ class AdminManagementController extends Controller
     }
 
     /**
-     * Upload an image file to S3.
+     * Xây dựng query users với filter theo từ khóa và role.
+     * Tách riêng để method users() gọn hơn, dễ unit test.
+     */
+    protected function buildUsersQuery(Request $request)
+    {
+        $query = $request->input('query');
+        $roleId = $request->input('role_id');
+
+        $usersQuery = User::with('roles');
+
+        // Tìm kiếm theo tên hoặc email (có escape LIKE để an toàn)
+        if (!empty($query)) {
+            $escapeLike = static function (string $value): string {
+                return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $value);
+            };
+
+            $escapedQuery = $escapeLike($query);
+
+            $usersQuery->where(function ($q) use ($escapedQuery) {
+                $q->whereRaw("name LIKE ? ESCAPE '\\\\'", ["%{$escapedQuery}%"])
+                    ->orWhereRaw("email LIKE ? ESCAPE '\\\\'", ["%{$escapedQuery}%"]);
+            });
+        }
+
+        // Lọc theo role nếu có chọn
+        if (!empty($roleId) && $roleId !== 'all') {
+            $usersQuery->whereHas('roles', function ($q) use ($roleId) {
+                $q->where('roles.id', $roleId);
+            });
+        }
+
+        return $usersQuery;
+    }
+
+    /**
+     * Upload ảnh lên S3 (và xóa ảnh cũ nếu có).
      *
-     * @param \Illuminate\Http\UploadedFile|null $image The uploaded image file
-     * @param string $directory The target directory path (e.g., 'images/tours' or 'images/categories')
-     * @param string|null $oldPath Optional path to old image to delete from S3
-     * @return string|null The full path to the uploaded image in S3, or null if no image provided
-     * @throws \Exception If file operations fail
+     * Tách thành hàm riêng để tái sử dụng cho tour & category, giữ controller gọn hơn.
+     *
+     * @throws \Exception
      */
     private function uploadImage(?UploadedFile $image, string $directory, ?string $oldPath = null): ?string
     {
@@ -508,32 +551,25 @@ class AdminManagementController extends Controller
             return null;
         }
 
-        // Delete old image if exists
+        // Xóa ảnh cũ nếu có
         $this->deleteImage($oldPath);
 
         try {
-            // Generate unique filename
             $imageName = Str::uuid() . '.' . $image->guessExtension();
-            
-            // Full path in S3
             $s3Path = $directory . '/' . $imageName;
-            
-            // Upload to S3
+
             Storage::disk('s3')->put($s3Path, file_get_contents($image->getRealPath()), 'public');
-            
-            // Return the S3 path (will be used to store in database)
+
             return $s3Path;
         } catch (\Exception $e) {
             \Log::error('Failed to upload image to S3: ' . $e->getMessage());
+
             throw new \Exception('Failed to upload image: ' . $e->getMessage());
         }
     }
 
     /**
-     * Delete an image file from S3.
-     *
-     * @param string|null $path The S3 path to the image file
-     * @return void
+     * Xóa ảnh trên S3 hoặc local (nếu tồn tại).
      */
     private function deleteImage(?string $path): void
     {
@@ -545,57 +581,15 @@ class AdminManagementController extends Controller
             }
         }
 
-        // Fallback to local storage
+        // Fallback xóa trên local storage
         try {
-            if (Storage::disk('public')->exists($path)) {
+            if ($path && Storage::disk('public')->exists($path)) {
                 Storage::disk('public')->delete($path);
                 \Log::info('Image deleted from local storage: ' . $path);
             }
         } catch (\Exception $e) {
             \Log::error('Failed to delete image from local storage: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Get the full URL for an image stored in S3.
-     *
-     * @param string|null $path The S3 path to the image
-     * @return string|null The full URL to the image, or null if path is empty
-     */
-    public static function getImageUrl(?string $path): ?string
-    {
-        if (!$path) {
-            return null;
-        }
-
-        // If path already contains http/https, return as is (for backward compatibility)
-        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
-            return $path;
-        }
-
-        // Get URL from S3
-        return Storage::disk('s3')->url($path);
-    }
-
-    /**
-     * Get the full URL for an image stored in S3.
-     *
-     * @param string|null $path The S3 path to the image
-     * @return string|null The full URL to the image, or null if path is empty
-     */
-    public static function getImageUrl(?string $path): ?string
-    {
-        if (!$path) {
-            return null;
-        }
-
-        // If path already contains http/https, return as is (for backward compatibility)
-        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
-            return $path;
-        }
-
-        // Get URL from S3
-        return Storage::disk('s3')->url($path);
     }
 }
 

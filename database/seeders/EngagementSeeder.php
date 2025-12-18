@@ -12,7 +12,9 @@ use Illuminate\Database\Seeder;
 class EngagementSeeder extends Seeder
 {
     /**
-     * Seed reviews, comments and likes for tour detail/demo pages.
+     * Seed reviews, comments và likes cho các trang chi tiết tour (demo).
+     *
+     * - Tạo một vài review/bình luận/like cho một số tour và user đầu tiên.
      *
      * @return void
      */

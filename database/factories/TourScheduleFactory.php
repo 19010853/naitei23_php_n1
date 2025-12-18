@@ -7,11 +7,16 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TourSchedule>
+ *
+ * Factory sinh dữ liệu giả cho TourSchedule (lịch khởi hành, giá, sức chứa).
  */
 class TourScheduleFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * Định nghĩa trạng thái mặc định của TourSchedule.
+     *
+     * - Ngày bắt đầu từ hiện tại đến 6 tháng sau.
+     * - Giá được làm tròn tới 1,000 VND để dữ liệu nhìn đẹp hơn.
      *
      * @return array<string, mixed>
      */

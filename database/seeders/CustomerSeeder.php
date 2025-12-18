@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Hash;
 class CustomerSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed một số khách hàng mẫu (Customer) để test luồng đặt tour.
+     *
+     * - Yêu cầu đã có role 'Customer' (RoleSeeder).
      *
      * @return void
      */

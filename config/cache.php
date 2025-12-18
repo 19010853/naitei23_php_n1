@@ -1,9 +1,9 @@
 <?php
 
+// Cấu hình cache cho ứng dụng (driver mặc định, các store, prefix key...).
 use Illuminate\Support\Str;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Cache Store

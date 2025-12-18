@@ -1,11 +1,11 @@
 <?php
 
+// Cấu hình logging (Monolog) cho ứng dụng: kênh mặc định, mức log, handler...
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Log Channel

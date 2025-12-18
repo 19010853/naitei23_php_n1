@@ -7,7 +7,9 @@ use Illuminate\Foundation\Http\Middleware\TrimStrings as Middleware;
 class TrimStrings extends Middleware
 {
     /**
-     * The names of the attributes that should not be trimmed.
+     * Danh sách các field KHÔNG bị trim (xoá khoảng trắng đầu/cuối).
+     *
+     * Mật khẩu và xác nhận mật khẩu được giữ nguyên để tránh làm sai dữ liệu nhập.
      *
      * @var array<int, string>
      */

@@ -64,9 +64,5 @@
                 @endforelse
             </tbody>
         </table>
-
-        <div class="pagination">
-            {{ $payments->links() }}
-        </div>
     </div>
 @endsection

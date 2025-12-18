@@ -7,7 +7,9 @@ use Illuminate\Cookie\Middleware\EncryptCookies as Middleware;
 class EncryptCookies extends Middleware
 {
     /**
-     * The names of the cookies that should not be encrypted.
+     * Danh sách tên cookie sẽ KHÔNG bị mã hoá.
+     *
+     * Mặc định để trống, tức là tất cả cookie đều được encrypt để tăng bảo mật.
      *
      * @var array<int, string>
      */

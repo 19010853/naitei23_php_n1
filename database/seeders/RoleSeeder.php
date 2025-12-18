@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 class RoleSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed các role cơ bản cho hệ thống (Admin, Customer).
      *
      * @return void
      */

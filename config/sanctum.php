@@ -1,7 +1,7 @@
 <?php
 
+// Cấu hình Laravel Sanctum (API token / SPA stateful auth).
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Stateful Domains

@@ -7,7 +7,7 @@ use Illuminate\View\Component;
 class GuestLayout extends Component
 {
     /**
-     * Get the view / contents that represents the component.
+     * Trả về view layout cho các trang dành cho khách/guest (chưa đăng nhập).
      *
      * @return \Illuminate\View\View
      */

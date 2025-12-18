@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+/**
+ * Model Like.
+ *
+ * Thể hiện hành động "thích" (like) của user trên các thực thể khác (review, ...).
+ */
 class Like extends Model
 {
     use HasFactory;
@@ -17,11 +22,17 @@ class Like extends Model
         'likeable_type',
     ];
 
+    /**
+     * Like thuộc về một user (người nhấn like).
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Đối tượng được like (review, ...).
+     */
     public function likeable(): MorphTo
     {
         return $this->morphTo();

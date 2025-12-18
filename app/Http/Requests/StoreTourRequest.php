@@ -8,7 +8,9 @@ use Illuminate\Support\Str;
 class StoreTourRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Xác định user có được phép tạo tour mới hay không.
+     *
+     * Mặc định cho phép (thường route đã gắn middleware admin).
      */
     public function authorize(): bool
     {
@@ -16,7 +18,10 @@ class StoreTourRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Các rules validate cho việc tạo mới tour.
+     *
+     * - Bắt buộc thuộc về 1 category tồn tại.
+     * - Tên và slug tour phải là duy nhất.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -33,7 +38,9 @@ class StoreTourRequest extends FormRequest
     }
 
     /**
-     * Prepare the data for validation.
+     * Chuẩn bị dữ liệu trước khi validate.
+     *
+     * - Nếu không truyền slug, tự sinh slug từ name + timestamp.
      */
     protected function prepareForValidation(): void
     {

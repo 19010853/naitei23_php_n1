@@ -8,7 +8,9 @@ use Illuminate\Support\Str;
 class UserFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * Định nghĩa trạng thái mặc định của User.
+     *
+     * - Email đã verify, mật khẩu là chuỗi cố định 'password' (hash sẵn).
      *
      * @return array
      */
@@ -24,7 +26,7 @@ class UserFactory extends Factory
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Chỉ định trạng thái email chưa được xác minh (unverified).
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
